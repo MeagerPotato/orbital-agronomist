@@ -57,10 +57,10 @@ The whole codebase was written in Cursor (eligibility: built with Cursor). Scori
 
 | Measure | Count | Where |
 |---|---|---|
-| Commits on `master` | **19** (including this README) | `git log` |
+| Commits on `master` | **31** (including this commit) | `git log` |
 | Always-on rules file | **1** | `.cursor/rules/project.mdc` |
 | Agents run in parallel | **3** (diagnosis/dashboard, voice/clips, voice polish) | [`docs/evidence/08-cursor-three-parallel-agents.png`](docs/evidence/08-cursor-three-parallel-agents.png) |
-| Per-task log lines | **20** | [`docs/CURSOR_LOG.md`](docs/CURSOR_LOG.md) |
+| Per-task log lines | **27** | [`docs/CURSOR_LOG.md`](docs/CURSOR_LOG.md) |
 
 Other evidence of Agent work: scaffold and satellite table ([`01`](docs/evidence/01-cursor-phase0-scaffold-commits.png), [`02`](docs/evidence/02-cursor-phase1-satellite-data-table.png)), scope change ([`03`](docs/evidence/03-cursor-agentA-scope-change.png)), voice E2E ([`04`](docs/evidence/04-cursor-agentB-voice-e2e.png)), Imagine clips and narration ([`10`](docs/evidence/10-cursor-agentB-imagine-clips.png), [`13`](docs/evidence/13-cursor-agentB-narration-delivery.png)), dashboard ([`11`](docs/evidence/11-cursor-agentA-diagnosis-v2-dashboard.png), [`14`](docs/evidence/14-dashboard-v1.png)), voice polish and literature ([`12`](docs/evidence/12-cursor-agentC-voice-polish.png), [`17`](docs/evidence/17-cursor-agentC-literature-grounding.png)).
 

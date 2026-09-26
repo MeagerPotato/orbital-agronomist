@@ -15,7 +15,7 @@ Call page: /call/cn-rice-2022 · Dashboard: /dashboard/cn-rice-2022
 
 | Time | Shot | Voiceover (say this) |
 |---|---|---|
-| 0:00–0:15 | Dashboard: map on the field, then the Sentinel-2 July vs August slider | "In August 2022, the worst drought in sixty years hit China's Yangtze basin. This is a real rice field in Jiangxi, seen by the Sentinel-2 satellite in July, and again in late August." |
+| 0:00–0:15 | Open on the Grok Imagine intro clip (clips/brand/intro.mp4, 3 s), then the dashboard map and the Sentinel-2 July vs August slider | "In August 2022, the worst drought in sixty years hit China's Yangtze basin. This is a real rice field in Jiangxi, seen by the Sentinel-2 satellite in July, and again in late August." |
 | 0:15–0:30 | Stat tiles, greenness chart, then the drought footprint layer on the map | "From orbit, the damage is clear: thirty-two percent less green than the same week a year earlier, and twenty-two millimeters of rain in a month instead of two hundred sixty. And it isn't one field. The whole area around it is browning." |
 | 0:30–0:40 | Title card: Orbital Agronomist + one line | "Nearly five hundred million farms worldwide are smallholdings. Most of those farmers will never open a satellite dashboard. So we built one that calls them." |
 | 0:40–0:55 | Click "Send drought alert call" on the dashboard; the phone rings; accept | "When a field starts to fail, Orbital Agronomist calls the farmer first." |
@@ -33,6 +33,7 @@ Call page: /call/cn-rice-2022 · Dashboard: /dashboard/cn-rice-2022
 2. **Alert call (75 s).** Press "Send drought alert call" on the dashboard, the phone rings, accept it on speaker. Ask the two questions, accept the video.
 3. **Hand the judge the QR (30 s).** "Scan this and call it yourself. Ask it anything about the field." Let them talk to it while the dashboard updates live.
 4. **Mandarin (20 s).** Switch to 中文 and ask one question yourself.
+4b. **Live Imagine (optional, 60 s running in the background).** Press "Generate a fresh video" right after the clip arrives; it finishes while you talk through the stack.
 5. **Stack + Cursor (25 s).** Architecture diagram, then the CURSOR_LOG and the three-agent screenshot.
 6. **What's next (10 s).** "Real phone lines through SIP, proactive calls when a field starts to fail, more languages, every smallholder field on Earth."
 
@@ -46,6 +47,7 @@ Call page: /call/cn-rice-2022 · Dashboard: /dashboard/cn-rice-2022
 **Expo checklist**
 - [ ] Phone charged, hotspot on, laptop charger
 - [ ] Deployed site tested on the venue Wi-Fi and on hotspot
-- [ ] Headphones for noisy rooms (the voice agent can hear the crowd)
+- [ ] In the expo hall, open the call page with ?ptt=1 (push to talk) so crowd noise does not trigger the agent
+- [ ] Headphones for noisy rooms
 - [ ] Demo video saved offline on the laptop as a fallback
 - [ ] QR printed or visible on the dashboard
