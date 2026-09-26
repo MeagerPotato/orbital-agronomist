@@ -6,6 +6,7 @@ import { QRCodeSVG } from "qrcode.react";
 import type { DashboardData } from "@/lib/dashboard-data";
 import type { Diagnosis } from "@/lib/types";
 import { NdviChart, WeatherChart } from "./charts";
+import { DroughtAlertButton } from "./drought-alert-button";
 import { LiveCallPanel } from "./live-call";
 import { OrbitPanel } from "./orbit-panel";
 
@@ -45,6 +46,7 @@ export function DashboardView({ farmId, data }: { farmId: string; data: Dashboar
             <p className="max-w-xl text-sm text-slate-400">
               Replay of the August 2022 Yangtze drought, using real Sentinel-2 and NASA data. The farmer is fictional.
             </p>
+            <DroughtAlertButton farmId={farmId} />
           </div>
           <div className="flex items-center gap-3 rounded-2xl border border-slate-700 bg-slate-900 p-3">
             <QRCodeSVG value={callUrl} size={112} bgColor="#0f172a" fgColor="#f8fafc" />

@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { droughtAlertHeadline, droughtAlertOpener } from "@/lib/alerts";
 import { loadCallBundle, type CallBundle } from "@/lib/farm-data";
 import { demoForced } from "@/lib/origin";
 import { createToolHandlers } from "@/lib/tools";
 import type { Lang } from "@/lib/types";
 import { VoiceSession, type CallStatus } from "@/lib/voice";
+import { IncomingAlert } from "./incoming-alert";
 import { IncomingClipCard } from "./incoming-clip";
+import { useIncomingAlert } from "./use-incoming-alert";
 import { useIncomingClip } from "./use-incoming-clip";
 
 type TranscriptLine = {
@@ -29,6 +32,9 @@ export function CallScreen({ farmId }: { farmId: string }) {
   const [draft, setDraft] = useState("");
   const [language, setLanguage] = useState<Lang>("zh");
   const sessionRef = useRef<VoiceSession | null>(null);
+  const answeringRef = useRef(false);
+  const canRing = status === "idle" || status === "ended" || status === "error";
+  const ring = useIncomingAlert(farmId, canRing);
   const incomingClip = useIncomingClip(callId);
 
   useEffect(() => {
@@ -66,10 +72,24 @@ export function CallScreen({ farmId }: { farmId: string }) {
     });
   }
 
-  async function startCall() {
+  async function startCall(existingCallId?: string) {
     if (!bundle || sessionRef.current) return;
     const fresh = (await loadCallBundle(farmId, language)) ?? bundle;
-    setBundle(fresh);
+    const opener = existingCallId
+      ? droughtAlertOpener(
+          fresh.language,
+          fresh.cropNames[fresh.language] || fresh.profile.crop,
+          fresh.derived.pctChangeVsBaseline,
+        )
+      : "";
+    const sessionBundle = opener
+      ? {
+          ...fresh,
+          greeting: opener,
+          instructions: `${fresh.instructions}\n\n# This call\nYou already opened by stating the drought alert. Do not greet again. When the caller responds, continue as usual: use tools before any field claim, then give general guidance.`,
+        }
+      : fresh;
+    setBundle(sessionBundle);
     setError("");
     setLines([]);
     setTools([]);
@@ -99,8 +119,45 @@ export function CallScreen({ farmId }: { farmId: string }) {
       (window as Window & { __muteCallMic?: () => void }).__muteCallMic = () => session.muteMic();
     }
     await session.start({
-      bundle: fresh,
-      createHandlers: (id) => createToolHandlers(fresh, id, { demo: demoForced() }),
+      bundle: sessionBundle,
+      callId: existingCallId,
+      createHandlers: (id) => createToolHandlers(sessionBundle, id, { demo: demoForced() }),
+    });
+  }
+
+  async function acceptAlert() {
+    const callIdToAccept = ring.alert?.callId;
+    if (!callIdToAccept || answeringRef.current) return;
+    answeringRef.current = true;
+    ring.clear(callIdToAccept);
+    try {
+      await fetch("/api/calls", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: callIdToAccept, language }),
+      });
+      await startCall(callIdToAccept);
+    } finally {
+      answeringRef.current = false;
+    }
+  }
+
+  async function declineAlert() {
+    const callIdToDecline = ring.alert?.callId;
+    if (!callIdToDecline) return;
+    ring.clear(callIdToDecline);
+    await fetch("/api/call-events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        callId: callIdToDecline,
+        events: [{ type: "status", payload: { declined: true } }],
+      }),
+    });
+    await fetch("/api/calls", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: callIdToDecline }),
     });
   }
 
@@ -129,6 +186,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
 
   const inCall = status !== "idle" && status !== "ended" && status !== "error";
   const canType = status === "listening" || status === "speaking" || status === "checking";
+  const ringing = Boolean(ring.alert) && !inCall;
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-4 py-6">
@@ -171,6 +229,15 @@ export function CallScreen({ farmId }: { farmId: string }) {
           Guidance is general; confirm with your local agricultural extension officer.
         </p>
       )}
+
+      {ringing ? (
+        <IncomingAlert
+          headline={droughtAlertHeadline(language)}
+          busy={false}
+          onAccept={() => void acceptAlert()}
+          onDecline={() => void declineAlert()}
+        />
+      ) : null}
 
       <p data-testid="call-status" className="text-sm">
         {statusLabel(status, mic)}
@@ -275,7 +342,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
         >
           Hang up
         </button>
-      ) : (
+      ) : ringing ? null : (
         <button
           type="button"
           onClick={() => void startCall()}

@@ -14,12 +14,16 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as {
     farmId?: string;
     language?: Lang;
+    alert?: boolean;
   } | null;
   const farmId = body?.farmId ?? "";
   const language = body?.language;
   const config = getFarmConfig(farmId);
   if (!config || !getFixture(farmId)) {
     return NextResponse.json({ error: "Unknown farm" }, { status: 404 });
+  }
+  if (body?.alert === true) {
+    return createAlertCall(farmId, config.profile.primaryLanguage);
   }
   if (!language || !config.profile.languages.includes(language)) {
     return NextResponse.json({ error: "Unsupported language" }, { status: 400 });
@@ -45,10 +49,27 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const body = (await request.json().catch(() => null)) as { id?: string } | null;
+  const body = (await request.json().catch(() => null)) as {
+    id?: string;
+    language?: Lang;
+  } | null;
   const id = body?.id ?? "";
   if (!UUID.test(id)) {
     return NextResponse.json({ error: "Invalid call id" }, { status: 400 });
+  }
+  if (body?.language === "zh" || body?.language === "en") {
+    try {
+      const supabase = createServerClient();
+      const { error } = await supabase.from("calls").update({ language: body.language }).eq("id", id);
+      if (error) {
+        console.error("[calls] language failed", error.message);
+        return NextResponse.json({ error: "Could not update the call" }, { status: 500 });
+      }
+      return NextResponse.json({ id, language: body.language });
+    } catch (error) {
+      console.error("[calls] language failed", error instanceof Error ? error.message : error);
+      return NextResponse.json({ error: "Could not update the call" }, { status: 500 });
+    }
   }
   try {
     const supabase = createServerClient();
@@ -66,6 +87,35 @@ export async function PATCH(request: Request) {
   } catch (error) {
     console.error("[calls] end failed", error instanceof Error ? error.message : error);
     return NextResponse.json({ error: "Could not end the call" }, { status: 500 });
+  }
+}
+
+async function createAlertCall(farmId: string, language: Lang) {
+  try {
+    const supabase = createServerClient();
+    await ensureFarmRow(farmId);
+    const { data, error } = await supabase
+      .from("calls")
+      .insert({ farm_id: farmId, language })
+      .select("id")
+      .single();
+    if (error || !data?.id) {
+      console.error("[calls] alert insert failed", error?.message);
+      return NextResponse.json({ error: "Could not open a call record" }, { status: 500 });
+    }
+    const event = await supabase.from("call_events").insert({
+      call_id: data.id,
+      type: "status",
+      payload: { alert: true },
+    });
+    if (event.error) {
+      console.error("[calls] alert event failed", event.error.message);
+      return NextResponse.json({ error: "Could not send the drought alert" }, { status: 500 });
+    }
+    return NextResponse.json({ id: data.id });
+  } catch (error) {
+    console.error("[calls] alert failed", error instanceof Error ? error.message : error);
+    return NextResponse.json({ error: "Could not send the drought alert" }, { status: 500 });
   }
 }
 

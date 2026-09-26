@@ -101,6 +101,8 @@ export class VoiceSession {
   async start(input: {
     bundle: CallBundle;
     createHandlers: (callId: string) => Record<string, ToolHandler>;
+    /** Reuse a call row, such as a drought alert that is already ringing. */
+    callId?: string;
   }): Promise<void> {
     if (this.ended) return;
     if (this.socket) return;
@@ -116,7 +118,7 @@ export class VoiceSession {
     try {
       const [tokenPayload, callPayload] = await Promise.all([
         this.fetchToken(),
-        this.createCall(input.bundle),
+        input.callId ? Promise.resolve({ id: input.callId }) : this.createCall(input.bundle),
       ]);
       this.callId = callPayload.id;
       this.callbacks.onCallId(callPayload.id);
