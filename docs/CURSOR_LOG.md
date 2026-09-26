@@ -17,3 +17,4 @@ Submission evidence. One line per task: timestamp, what was built, which Cursor 
 - 2026-09-26 15:26 EDT — Voice polish: one transcript bubble and one call event per utterance, greeting once, natural dates, and greenness as a whole-number percent change. Cursor feature: Agent (browser).
 - 2026-09-26 15:29 EDT — Regenerated the rice diagnosis so greenness is a rounded percent change, dates are spoken, and the crop is 中稻 / mid-season rice, then reseeded Supabase. Cursor feature: Agent.
 - 2026-09-26 15:33 EDT — Built the judge dashboard and home page: field map, NDVI and weather charts, diagnosis, live call panel, and QR code. Cursor feature: Agent (browser).
+- 2026-09-26 15:49 EDT — Added Sentinel-2 true-color and NDVI images for July 6 and August 25, with a before/after slider on the dashboard. Cursor feature: Agent (browser).

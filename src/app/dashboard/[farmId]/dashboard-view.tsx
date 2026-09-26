@@ -7,6 +7,7 @@ import type { DashboardData } from "@/lib/dashboard-data";
 import type { Diagnosis } from "@/lib/types";
 import { NdviChart, WeatherChart } from "./charts";
 import { LiveCallPanel } from "./live-call";
+import { OrbitPanel } from "./orbit-panel";
 
 const FieldMap = dynamic(() => import("./field-map"), {
   ssr: false,
@@ -49,6 +50,8 @@ export function DashboardView({ farmId, data }: { farmId: string; data: Dashboar
             </div>
           </div>
         </header>
+
+        <OrbitPanel farmId={farmId} polygon={farm.polygon} />
 
         <div className="grid gap-4 lg:grid-cols-2">
           <Panel title="Field">
