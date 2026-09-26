@@ -20,3 +20,4 @@ Submission evidence. One line per task: timestamp, what was built, which Cursor 
 - 2026-09-26 15:49 EDT — Added Sentinel-2 true-color and NDVI images for July 6 and August 25, with a before/after slider on the dashboard. Cursor feature: Agent (browser).
 - 2026-09-26 16:27 EDT — Literature grounding: IRRI and FAO rice drought/heat documents in an xAI collection, file_search on the voice session, and a cited source on the English call. Cursor feature: Agent (browser).
 - 2026-09-26 16:45 EDT — Phase 7 deploy hardening: origin-based home links, token/socket/mic/clip error states, ?demo=1 pregenerated clips, local production build. Cursor feature: Agent.
+- 2026-09-26 16:46 EDT — Dashboard polish: Yugan County location, four stat tiles from Supabase, rolling temperature, and chart axis titles. Cursor feature: Agent (browser).

@@ -3,6 +3,8 @@ import { loadDashboard } from "@/lib/dashboard-data";
 import { getFarmConfig } from "@/lib/farms";
 import { DashboardView } from "./dashboard-view";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage({
   params,
 }: {

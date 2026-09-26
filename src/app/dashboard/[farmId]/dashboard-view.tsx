@@ -39,8 +39,11 @@ export function DashboardView({ farmId, data }: { farmId: string; data: Dashboar
             <p className="text-xs tracking-[0.25em] text-amber-300 uppercase">Orbital Agronomist</p>
             <h1 className="text-3xl font-semibold text-white">{farm.profile.farmerName}</h1>
             <p className="text-lg text-slate-400">{farm.profile.farmerNameEn}</p>
-            <p className="text-slate-300">
-              {farm.profile.crop} · {farm.profile.region} · replay of {farm.simulatedToday}
+            <p className="text-slate-200">
+              {farm.profile.region} · {farm.profile.village}
+            </p>
+            <p className="max-w-xl text-sm text-slate-400">
+              Replay of the August 2022 Yangtze drought, using real Sentinel-2 and NASA data. The farmer is fictional.
             </p>
           </div>
           <div className="flex items-center gap-3 rounded-2xl border border-slate-700 bg-slate-900 p-3">
@@ -50,6 +53,29 @@ export function DashboardView({ farmId, data }: { farmId: string; data: Dashboar
             </div>
           </div>
         </header>
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <StatTile
+            label="Greenness vs last year"
+            value={formatSignedPercent(farm.derived.pctChangeVsBaseline)}
+            detail="Same time last year"
+          />
+          <StatTile
+            label="Rain, last 30 days"
+            value={`${formatMm(farm.derived.rain30dMm)} vs ${formatMm(farm.derived.rain30dMmBaseline)}`}
+            detail={`Versus ${farm.baselineYear}`}
+          />
+          <StatTile
+            label="Heat days, last 30 days"
+            value={String(farm.derived.heatDays35C_30d)}
+            detail="Days at or above 35°C"
+          />
+          <StatTile
+            label="Diagnosis"
+            value={diagnosis ? STATUS_LABEL[diagnosis.status] : "Not ready"}
+            detail={diagnosis ? `Severity ${diagnosis.severity}` : "No diagnosis stored"}
+          />
+        </div>
 
         <OrbitPanel farmId={farmId} polygon={farm.polygon} />
 
@@ -69,7 +95,7 @@ export function DashboardView({ farmId, data }: { farmId: string; data: Dashboar
               />
             </div>
           </Panel>
-          <Panel title={`Cumulative rain and max temperature, ${eventYear} vs ${farm.baselineYear}`}>
+          <Panel title={`Rain and max temperature, ${eventYear} vs ${farm.baselineYear}`}>
             <div className="h-80">
               <WeatherChart points={weather} eventYear={eventYear} baselineYear={farm.baselineYear} />
             </div>
@@ -91,6 +117,28 @@ export function DashboardView({ farmId, data }: { farmId: string; data: Dashboar
       </div>
     </main>
   );
+}
+
+function StatTile({ label, value, detail }: { label: string; value: string; detail: string }) {
+  return (
+    <section className="rounded-2xl border border-slate-700 bg-slate-900/80 px-4 py-3">
+      <p className="text-xs tracking-wide text-slate-400 uppercase">{label}</p>
+      <p className="mt-1 text-2xl font-semibold text-white">{value}</p>
+      <p className="text-sm text-slate-400">{detail}</p>
+    </section>
+  );
+}
+
+function formatSignedPercent(value: number): string {
+  const rounded = Math.round(value);
+  if (rounded > 0) return `+${rounded}%`;
+  if (rounded < 0) return `−${Math.abs(rounded)}%`;
+  return "0%";
+}
+
+function formatMm(value: number): string {
+  const text = Number.isInteger(value) ? String(value) : String(value);
+  return `${text} mm`;
 }
 
 function Panel({ title, children }: { title: string; children: ReactNode }) {
