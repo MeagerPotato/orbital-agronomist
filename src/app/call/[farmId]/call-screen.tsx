@@ -26,7 +26,6 @@ export function CallScreen({ farmId }: { farmId: string }) {
   const [draft, setDraft] = useState("");
   const [language, setLanguage] = useState<Lang>("zh");
   const sessionRef = useRef<VoiceSession | null>(null);
-  const lineIds = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,15 +43,22 @@ export function CallScreen({ farmId }: { farmId: string }) {
     };
   }, [farmId]);
 
-  function pushLine(role: "user" | "assistant", text: string, final: boolean) {
+  function pushLine(role: "user" | "assistant", text: string, final: boolean, itemId: string) {
     setLines((current) => {
-      const last = current[current.length - 1];
-      if (last && last.role === role && !last.final) {
-        return [...current.slice(0, -1), { ...last, text, final }];
+      const index = current.findIndex((line) => line.id === itemId);
+      const trimmed = text.trim();
+      if (!trimmed) {
+        if (index < 0) return current;
+        return current.filter((line) => line.id !== itemId);
       }
-      if (last && last.role === role && last.final && last.text === text) return current;
-      lineIds.current += 1;
-      return [...current, { id: `${lineIds.current}`, role, text, final }];
+      if (index >= 0) {
+        const existing = current[index];
+        if (existing.final && !final) return current;
+        const next = current.slice();
+        next[index] = { ...existing, text: trimmed, final: existing.final || final };
+        return next;
+      }
+      return [...current, { id: itemId, role, text: trimmed, final }];
     });
   }
 
@@ -121,7 +127,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
         <p className="text-xs tracking-widest text-neutral-500 uppercase">Orbital Agronomist</p>
         <h1 className="text-2xl font-semibold">{bundle.profile.farmerName}</h1>
         <p className="text-sm text-neutral-600 dark:text-neutral-300">
-          {bundle.profile.crop} · {bundle.profile.region} · {language.toUpperCase()}
+          {bundle.cropNames[language] || bundle.profile.crop} · {bundle.profile.region} · {language.toUpperCase()}
         </p>
         <p className="text-sm text-neutral-600 dark:text-neutral-300">{bundle.eventName}</p>
       </header>
@@ -192,7 +198,12 @@ export function CallScreen({ farmId }: { farmId: string }) {
           <p className="text-sm text-neutral-500">The call transcript will appear here.</p>
         ) : (
           lines.map((line) => (
-            <p key={line.id} className={line.role === "user" ? "text-right" : "text-left"}>
+            <p
+              key={line.id}
+              data-testid="transcript-line"
+              data-role={line.role}
+              className={line.role === "user" ? "text-right" : "text-left"}
+            >
               <span className="mb-1 block text-xs text-neutral-500">
                 {line.role === "user" ? "Farmer" : "Orbital Agronomist"}
               </span>

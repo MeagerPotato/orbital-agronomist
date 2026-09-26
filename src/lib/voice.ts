@@ -19,7 +19,7 @@ type TranscriptRole = "user" | "assistant";
 
 export type VoiceCallbacks = {
   onStatus: (status: CallStatus) => void;
-  onTranscript: (role: TranscriptRole, text: string, final: boolean) => void;
+  onTranscript: (role: TranscriptRole, text: string, final: boolean, itemId: string) => void;
   onTool: (name: string, phase: "call" | "result") => void;
   onChecking: (active: boolean) => void;
   onMic: (state: "on" | "denied") => void;
@@ -78,6 +78,12 @@ export class VoiceSession {
   private seenEventTypes = new Set<string>();
   private postedTranscripts = new Set<string>();
   private assistantDraft = "";
+  private assistantItemId = "";
+  private greetingText = "";
+  private greetingEcho = false;
+  private userDrafts = new Map<string, { text: string; posted: boolean }>();
+  private userFallbackId = "";
+  private typedCount = 0;
   private eventQueue: QueuedEvent[] = [];
   private eventTimer: ReturnType<typeof setTimeout> | null = null;
   private checking = false;
@@ -137,7 +143,8 @@ export class VoiceSession {
         content: [{ type: "input_text", text: trimmed }],
       },
     });
-    this.publishTranscript("user", trimmed, true);
+    this.typedCount += 1;
+    this.publishTranscript("user", trimmed, true, `typed-${this.typedCount}`);
     this.send({ type: "response.create" });
     this.callbacks.onStatus("speaking");
   }
@@ -234,7 +241,7 @@ export class VoiceSession {
         voice: bundle.voice,
         instructions: bundle.instructions,
         tools: bundle.tools,
-        turn_detection: { type: "server_vad", silence_duration_ms: 700 },
+        turn_detection: { type: "server_vad", silence_duration_ms: 900 },
         audio: {
           input: {
             format: { type: "audio/pcm", rate: 24000 },
@@ -303,6 +310,15 @@ export class VoiceSession {
     if (type === "response.created") {
       this.responseDone = false;
       this.assistantDraft = "";
+      if (!this.greetingEcho) this.finalizeUserTranscripts();
+      if (!this.greetingEcho) {
+        const response = event.response;
+        const responseId =
+          response && typeof response === "object" && typeof (response as { id?: unknown }).id === "string"
+            ? (response as { id: string }).id
+            : "";
+        this.assistantItemId = responseId || `assistant-${Date.now()}`;
+      }
       return;
     }
 
@@ -312,7 +328,9 @@ export class VoiceSession {
     }
 
     if (type === "response.done") {
-      this.captureDoneTranscript(event);
+      const echoing = this.greetingEcho;
+      this.greetingEcho = false;
+      if (!echoing) this.captureDoneTranscript(event);
       this.captureDoneTools(event);
       this.responseDone = true;
       if (this.pendingTools.length > 0) this.armToolFlush();
@@ -324,8 +342,11 @@ export class VoiceSession {
     const bundle = this.bundle;
     if (!bundle || this.greeted) return;
     this.greeted = true;
+    this.greetingEcho = true;
+    this.greetingText = bundle.greeting;
+    this.assistantItemId = "greeting";
     this.callbacks.onStatus("greeting");
-    this.publishTranscript("assistant", bundle.greeting, true);
+    this.publishTranscript("assistant", bundle.greeting, true, "greeting");
     this.send({
       type: "conversation.item.create",
       item: {
@@ -343,9 +364,12 @@ export class VoiceSession {
       type === "response.audio_transcript.delta"
     ) {
       const delta = typeof event.delta === "string" ? event.delta : "";
+      if (this.greetingEcho) return true;
       if (delta) {
         this.assistantDraft += delta;
-        this.callbacks.onTranscript("assistant", this.assistantDraft, false);
+        if (this.matchesGreeting(this.assistantDraft)) return true;
+        const itemId = this.assistantTranscriptId(event);
+        this.callbacks.onTranscript("assistant", this.assistantDraft, false, itemId);
       }
       return true;
     }
@@ -354,25 +378,27 @@ export class VoiceSession {
       type === "response.output_audio_transcript.done" ||
       type === "response.audio_transcript.done"
     ) {
+      if (this.greetingEcho) {
+        this.assistantDraft = "";
+        return true;
+      }
       const transcript =
         typeof event.transcript === "string" ? event.transcript : this.assistantDraft;
-      if (transcript) this.publishTranscript("assistant", transcript, true);
+      if (transcript && !this.matchesGreeting(transcript)) {
+        this.publishTranscript("assistant", transcript, true, this.assistantTranscriptId(event));
+      }
       this.assistantDraft = "";
       return true;
     }
 
     if (
       type === "conversation.item.input_audio_transcription.completed" ||
-      type === "conversation.item.input_audio_transcription.done"
+      type === "conversation.item.input_audio_transcription.done" ||
+      type === "conversation.item.input_audio_transcription.updated"
     ) {
-      const transcript = typeof event.transcript === "string" ? event.transcript : "";
-      if (transcript) this.publishTranscript("user", transcript, true);
-      return true;
-    }
-
-    if (type === "conversation.item.input_audio_transcription.updated") {
-      const transcript = typeof event.transcript === "string" ? event.transcript : "";
-      if (transcript) this.callbacks.onTranscript("user", transcript, false);
+      const status = typeof event.status === "string" ? event.status : "";
+      const final = type !== "conversation.item.input_audio_transcription.updated" && status !== "in_progress";
+      this.handleUserTranscript(event, final);
       return true;
     }
 
@@ -409,8 +435,8 @@ export class VoiceSession {
       for (const part of content) {
         if (!part || typeof part !== "object") continue;
         const transcript = (part as { transcript?: unknown }).transcript;
-        if (typeof transcript === "string" && transcript.trim()) {
-          this.publishTranscript("assistant", transcript, true);
+        if (typeof transcript === "string" && transcript.trim() && !this.matchesGreeting(transcript)) {
+          this.publishTranscript("assistant", transcript, true, this.assistantItemId || "assistant-current");
         }
       }
     }
@@ -478,12 +504,71 @@ export class VoiceSession {
     }
   }
 
-  private publishTranscript(role: TranscriptRole, text: string, final: boolean): void {
+  private handleUserTranscript(event: ServerEvent, final: boolean): void {
+    const itemId = this.userItemId(event);
+    const raw = typeof event.transcript === "string" ? event.transcript : "";
+    if (isDiscardedTranscript(raw)) {
+      this.userDrafts.delete(itemId);
+      this.callbacks.onTranscript("user", "", true, itemId);
+      return;
+    }
+    const text = raw.trim();
+    const prior = this.userDrafts.get(itemId) ?? { text: "", posted: false };
+    prior.text = text;
+    this.userDrafts.set(itemId, prior);
+    this.callbacks.onTranscript("user", text, final || prior.posted, itemId);
+    if (final) this.postUserTranscript(itemId);
+  }
+
+  private finalizeUserTranscripts(): void {
+    for (const itemId of this.userDrafts.keys()) {
+      const row = this.userDrafts.get(itemId);
+      if (!row || row.posted || isDiscardedTranscript(row.text)) continue;
+      this.callbacks.onTranscript("user", row.text, true, itemId);
+      this.postUserTranscript(itemId);
+    }
+  }
+
+  private postUserTranscript(itemId: string): void {
+    const row = this.userDrafts.get(itemId);
+    if (!row || row.posted || isDiscardedTranscript(row.text)) return;
+    const key = `user:${itemId}`;
+    row.posted = true;
+    if (this.postedTranscripts.has(key)) return;
+    this.postedTranscripts.add(key);
+    this.postEvent("user_transcript", { text: row.text });
+    if (itemId === this.userFallbackId) this.userFallbackId = "";
+  }
+
+  private userItemId(event: ServerEvent): string {
+    const id = event.item_id;
+    if (typeof id === "string" && id) return id;
+    if (!this.userFallbackId) this.userFallbackId = `user-${Date.now()}`;
+    return this.userFallbackId;
+  }
+
+  private assistantTranscriptId(event: ServerEvent): string {
+    const id = event.item_id;
+    if (typeof id === "string" && id) {
+      this.assistantItemId = id;
+      return id;
+    }
+    if (!this.assistantItemId) this.assistantItemId = `assistant-${Date.now()}`;
+    return this.assistantItemId;
+  }
+
+  private matchesGreeting(text: string): boolean {
     const trimmed = text.trim();
-    if (!trimmed) return;
-    this.callbacks.onTranscript(role, trimmed, final);
+    if (!trimmed || !this.greetingText) return false;
+    return trimmed === this.greetingText || this.greetingText.startsWith(trimmed);
+  }
+
+  private publishTranscript(role: TranscriptRole, text: string, final: boolean, itemId: string): void {
+    const trimmed = text.trim();
+    if (isDiscardedTranscript(trimmed)) return;
+    this.callbacks.onTranscript(role, trimmed, final, itemId);
     if (!final) return;
-    const key = `${role}:${trimmed}`;
+    const key = `${role}:${itemId}`;
     if (this.postedTranscripts.has(key)) return;
     this.postedTranscripts.add(key);
     this.postEvent(role === "user" ? "user_transcript" : "assistant_transcript", { text: trimmed });
@@ -529,6 +614,11 @@ export class VoiceSession {
     }
     console.log("[voice] event", type, event ? summarizeEvent(event) : "");
   }
+}
+
+export function isDiscardedTranscript(text: string): boolean {
+  const trimmed = text.trim();
+  return !trimmed || trimmed === "..." || trimmed.toLowerCase() === "[noise]";
 }
 
 function parseArgs(raw: unknown): Record<string, unknown> {

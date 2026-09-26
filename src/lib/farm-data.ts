@@ -1,5 +1,6 @@
 import { FIXTURE_FLAG, getFixture } from "./fixtures";
 import {
+  cropFor,
   getFarmConfig,
   greetingFor,
   instructionsFor,
@@ -17,6 +18,7 @@ export type CallBundle = {
   instructions: string;
   tools: VoiceTool[];
   profile: FarmProfile;
+  cropNames: Partial<Record<Lang, string>>;
   derived: FarmDerived;
   diagnosis: Diagnosis;
   simulatedToday: string;
@@ -100,6 +102,12 @@ export async function loadCallBundle(
     console.error("[farm-data] using fixture", error);
   }
 
+  const cropNames: Partial<Record<Lang, string>> = {};
+  for (const option of config.profile.languages) {
+    cropNames[option] = cropFor(config, option);
+  }
+  profile = { ...profile, crop: cropNames[selected] || profile.crop };
+
   const village = profile.village || profile.region;
   return {
     farmId,
@@ -115,6 +123,7 @@ export async function loadCallBundle(
     }),
     tools: toolsFor(config),
     profile,
+    cropNames,
     derived,
     diagnosis,
     simulatedToday,

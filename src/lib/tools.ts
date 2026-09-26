@@ -1,3 +1,4 @@
+import { formatSpokenDate } from "./farms";
 import { FIXTURE_FLAG } from "./fixtures";
 import type { CallBundle } from "./farm-data";
 import type { FarmDerived, Lang } from "./types";
@@ -10,7 +11,9 @@ function percentPhrase(pct: number, less: string, more: string): string {
 }
 
 export function fieldTrend(derived: FarmDerived, baselineYear: number): string {
-  return `Latest greenness is ${derived.ndviNow}. That is about ${percentPhrase(derived.pctChange30d, "less green", "greener")} than 30 days ago (${derived.ndvi30dAgo}), and about ${percentPhrase(derived.pctChangeVsBaseline, "less green", "greener")} than the same time in ${baselineYear} (${derived.ndviSameDateBaseline}).`;
+  const month = percentPhrase(derived.pctChange30d, "less green", "greener");
+  const year = percentPhrase(derived.pctChangeVsBaseline, "less green", "greener");
+  return `Greenness is about ${month} than last month, and about ${year} than the same time in ${baselineYear}.`;
 }
 
 export function weatherTrend(derived: FarmDerived, baselineYear: number): string {
@@ -40,7 +43,7 @@ export function createToolHandlers(
         country: profile.country,
         crop: profile.crop,
         event: profile.event,
-        simulatedToday: bundle.simulatedToday,
+        simulatedToday: formatSpokenDate(bundle.simulatedToday, language),
         baselineYear: bundle.baselineYear,
         language,
       });
@@ -49,12 +52,9 @@ export function createToolHandlers(
     async get_field_health() {
       const derived = bundle.derived;
       return flagged(bundle, {
-        lastObsDate: bundle.lastObsDate,
-        ndviNow: derived.ndviNow,
-        ndvi30dAgo: derived.ndvi30dAgo,
-        ndviSameDateBaseline: derived.ndviSameDateBaseline,
-        pctChange30d: derived.pctChange30d,
-        pctChangeVsBaseline: derived.pctChangeVsBaseline,
+        lastObsDate: formatSpokenDate(bundle.lastObsDate, language),
+        pctChange30d: Math.round(derived.pctChange30d),
+        pctChangeVsBaseline: Math.round(derived.pctChangeVsBaseline),
         trend: fieldTrend(derived, bundle.baselineYear),
       });
     },
