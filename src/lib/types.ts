@@ -2,7 +2,7 @@
 
 export type Lang = "zh" | "en";
 
-/** Text for the languages that farm supports. Farm B is English only. */
+/** Text for the languages that farm supports. */
 export type LocalizedText = Partial<Record<Lang, string>>;
 
 export type GeoPolygon = {
@@ -78,4 +78,37 @@ export type Diagnosis = {
   summary: LocalizedText;
   actions: { topic: string; text: LocalizedText }[];
   caveats: LocalizedText;
+};
+
+export type FarmConfig = {
+  id: string;
+  baselineYear: number;
+  profile: {
+    farmerName: string;
+    farmerNameEn: string;
+    fictional: boolean;
+    where?: string;
+    region: string;
+    country: string;
+    crop: string;
+    /** Spoken crop name. `crop` stays a plain string for the data scripts. */
+    cropLocalized?: Partial<Record<Lang, string>>;
+    languages: Lang[];
+    primaryLanguage: Lang;
+    event: { name: string; summary: string };
+    village?: string;
+  };
+  clipTopics: string[];
+  greetings?: Partial<Record<Lang, string>>;
+};
+
+export type VoiceTool = {
+  type: "function";
+  name: string;
+  description: string;
+  parameters: {
+    type: "object";
+    properties: Record<string, unknown>;
+    required?: string[];
+  };
 };
