@@ -1,0 +1,138 @@
+{
+  "event": [
+    {
+      "date": "2022-07-06",
+      "mean": 0.8068,
+      "stdev": 0.1816,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2022-07-11",
+      "mean": 0.8069,
+      "stdev": 0.129,
+      "validPixelPct": 98.7
+    },
+    {
+      "date": "2022-07-26",
+      "mean": 0.7701,
+      "stdev": 0.096,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2022-07-31",
+      "mean": 0.8,
+      "stdev": 0.0933,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2022-08-05",
+      "mean": 0.7729,
+      "stdev": 0.0875,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2022-08-15",
+      "mean": 0.3952,
+      "stdev": 0.2214,
+      "validPixelPct": 82.2
+    },
+    {
+      "date": "2022-08-20",
+      "mean": 0.466,
+      "stdev": 0.1762,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2022-08-25",
+      "mean": 0.6085,
+      "stdev": 0.1256,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2022-09-09",
+      "mean": 0.7652,
+      "stdev": 0.1324,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2022-09-14",
+      "mean": 0.7308,
+      "stdev": 0.0781,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2022-09-19",
+      "mean": 0.7164,
+      "stdev": 0.0888,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2022-09-24",
+      "mean": 0.6863,
+      "stdev": 0.0872,
+      "validPixelPct": 100
+    }
+  ],
+  "baseline": [
+    {
+      "date": "2021-06-11",
+      "mean": 0.2391,
+      "stdev": 0.3346,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2021-07-11",
+      "mean": 0.5897,
+      "stdev": 0.1945,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2021-07-21",
+      "mean": 0.6818,
+      "stdev": 0.1991,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2021-07-26",
+      "mean": 0.7203,
+      "stdev": 0.1731,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2021-07-31",
+      "mean": 0.8049,
+      "stdev": 0.1863,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2021-08-30",
+      "mean": 0.8994,
+      "stdev": 0.0691,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2021-09-04",
+      "mean": 0.8727,
+      "stdev": 0.0688,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2021-09-09",
+      "mean": 0.8468,
+      "stdev": 0.06,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2021-09-14",
+      "mean": 0.8033,
+      "stdev": 0.0536,
+      "validPixelPct": 100
+    },
+    {
+      "date": "2021-09-24",
+      "mean": 0.762,
+      "stdev": 0.0473,
+      "validPixelPct": 100
+    }
+  ]
+}

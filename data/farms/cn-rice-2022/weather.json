@@ -1,0 +1,1710 @@
+[
+  {
+    "date": "2021-06-01",
+    "precipMm": 1.82,
+    "tMaxC": 30.49,
+    "tMeanC": 26.14,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2021-06-02",
+    "precipMm": 10.08,
+    "tMaxC": 28.98,
+    "tMeanC": 25.61,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2021-06-03",
+    "precipMm": 21.3,
+    "tMaxC": 31.5,
+    "tMeanC": 25.61,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2021-06-04",
+    "precipMm": 15.58,
+    "tMaxC": 26.53,
+    "tMeanC": 21.59,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2021-06-05",
+    "precipMm": 0.41,
+    "tMaxC": 28.38,
+    "tMeanC": 23.22,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2021-06-06",
+    "precipMm": 0,
+    "tMaxC": 29.93,
+    "tMeanC": 24.69,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-06-07",
+    "precipMm": 0,
+    "tMaxC": 31.13,
+    "tMeanC": 24.84,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-06-08",
+    "precipMm": 0,
+    "tMaxC": 31.17,
+    "tMeanC": 26.14,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-06-09",
+    "precipMm": 8.08,
+    "tMaxC": 32.12,
+    "tMeanC": 28.11,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-06-10",
+    "precipMm": 17.18,
+    "tMaxC": 28.69,
+    "tMeanC": 26.65,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-06-11",
+    "precipMm": 9.44,
+    "tMaxC": 27.89,
+    "tMeanC": 26.09,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-06-12",
+    "precipMm": 3.32,
+    "tMaxC": 30.95,
+    "tMeanC": 26.8,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-06-13",
+    "precipMm": 3.12,
+    "tMaxC": 31.34,
+    "tMeanC": 27.71,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-06-14",
+    "precipMm": 1.81,
+    "tMaxC": 31.18,
+    "tMeanC": 28.03,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-06-15",
+    "precipMm": 0.05,
+    "tMaxC": 29.71,
+    "tMeanC": 27.77,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-06-16",
+    "precipMm": 0.25,
+    "tMaxC": 33.47,
+    "tMeanC": 29.58,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-06-17",
+    "precipMm": 3.62,
+    "tMaxC": 33.12,
+    "tMeanC": 29.63,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-06-18",
+    "precipMm": 12.82,
+    "tMaxC": 32.37,
+    "tMeanC": 29.02,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-06-19",
+    "precipMm": 22.82,
+    "tMaxC": 30.46,
+    "tMeanC": 26.3,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-06-20",
+    "precipMm": 15.72,
+    "tMaxC": 28.9,
+    "tMeanC": 25.18,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-06-21",
+    "precipMm": 14.39,
+    "tMaxC": 30.05,
+    "tMeanC": 26.11,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-06-22",
+    "precipMm": 0.17,
+    "tMaxC": 28.31,
+    "tMeanC": 25.01,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-06-23",
+    "precipMm": 0.05,
+    "tMaxC": 30.14,
+    "tMeanC": 25.22,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-06-24",
+    "precipMm": 0,
+    "tMaxC": 28.76,
+    "tMeanC": 25.4,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-06-25",
+    "precipMm": 2.14,
+    "tMaxC": 30.05,
+    "tMeanC": 26.44,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-06-26",
+    "precipMm": 21.44,
+    "tMaxC": 31.49,
+    "tMeanC": 27.46,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-06-27",
+    "precipMm": 29.88,
+    "tMaxC": 31.15,
+    "tMeanC": 28.32,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-06-28",
+    "precipMm": 28.81,
+    "tMaxC": 31.26,
+    "tMeanC": 28.39,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2021-06-29",
+    "precipMm": 50.16,
+    "tMaxC": 29.45,
+    "tMeanC": 27.33,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2021-06-30",
+    "precipMm": 25.15,
+    "tMaxC": 28.24,
+    "tMeanC": 26.71,
+    "rootZoneWetness": 0.98
+  },
+  {
+    "date": "2021-07-01",
+    "precipMm": 138.67,
+    "tMaxC": 27.86,
+    "tMeanC": 26.2,
+    "rootZoneWetness": 1
+  },
+  {
+    "date": "2021-07-02",
+    "precipMm": 45.85,
+    "tMaxC": 30.69,
+    "tMeanC": 27.48,
+    "rootZoneWetness": 1
+  },
+  {
+    "date": "2021-07-03",
+    "precipMm": 23.78,
+    "tMaxC": 29.7,
+    "tMeanC": 27.61,
+    "rootZoneWetness": 1
+  },
+  {
+    "date": "2021-07-04",
+    "precipMm": 22.83,
+    "tMaxC": 29.67,
+    "tMeanC": 27.68,
+    "rootZoneWetness": 1
+  },
+  {
+    "date": "2021-07-05",
+    "precipMm": 1.31,
+    "tMaxC": 31.39,
+    "tMeanC": 28.88,
+    "rootZoneWetness": 1
+  },
+  {
+    "date": "2021-07-06",
+    "precipMm": 0.03,
+    "tMaxC": 33.46,
+    "tMeanC": 30.03,
+    "rootZoneWetness": 0.99
+  },
+  {
+    "date": "2021-07-07",
+    "precipMm": 0.48,
+    "tMaxC": 32.53,
+    "tMeanC": 28.99,
+    "rootZoneWetness": 0.99
+  },
+  {
+    "date": "2021-07-08",
+    "precipMm": 2.06,
+    "tMaxC": 30.78,
+    "tMeanC": 28.62,
+    "rootZoneWetness": 0.99
+  },
+  {
+    "date": "2021-07-09",
+    "precipMm": 7.39,
+    "tMaxC": 29.82,
+    "tMeanC": 28.09,
+    "rootZoneWetness": 0.99
+  },
+  {
+    "date": "2021-07-10",
+    "precipMm": 0.7,
+    "tMaxC": 31.42,
+    "tMeanC": 28.76,
+    "rootZoneWetness": 0.98
+  },
+  {
+    "date": "2021-07-11",
+    "precipMm": 0.11,
+    "tMaxC": 31.1,
+    "tMeanC": 28.67,
+    "rootZoneWetness": 0.98
+  },
+  {
+    "date": "2021-07-12",
+    "precipMm": 0,
+    "tMaxC": 32.74,
+    "tMeanC": 29.22,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2021-07-13",
+    "precipMm": 0,
+    "tMaxC": 32.75,
+    "tMeanC": 29.23,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2021-07-14",
+    "precipMm": 0,
+    "tMaxC": 33.62,
+    "tMeanC": 29.41,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2021-07-15",
+    "precipMm": 0,
+    "tMaxC": 34.84,
+    "tMeanC": 30.71,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-07-16",
+    "precipMm": 2.45,
+    "tMaxC": 31.99,
+    "tMeanC": 29.03,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-07-17",
+    "precipMm": 16.53,
+    "tMaxC": 28.56,
+    "tMeanC": 26.81,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-07-18",
+    "precipMm": 13.55,
+    "tMaxC": 29.11,
+    "tMeanC": 26.3,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2021-07-19",
+    "precipMm": 1.75,
+    "tMaxC": 31.6,
+    "tMeanC": 27.74,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2021-07-20",
+    "precipMm": 0.54,
+    "tMaxC": 33.34,
+    "tMeanC": 28.22,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2021-07-21",
+    "precipMm": 0.04,
+    "tMaxC": 32.9,
+    "tMeanC": 28.37,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-07-22",
+    "precipMm": 0.01,
+    "tMaxC": 32.42,
+    "tMeanC": 27.79,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-07-23",
+    "precipMm": 4.31,
+    "tMaxC": 32.1,
+    "tMeanC": 27.9,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-07-24",
+    "precipMm": 2.52,
+    "tMaxC": 32.06,
+    "tMeanC": 27.42,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-07-25",
+    "precipMm": 4.38,
+    "tMaxC": 30.89,
+    "tMeanC": 27.13,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2021-07-26",
+    "precipMm": 10.3,
+    "tMaxC": 30.52,
+    "tMeanC": 27.62,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2021-07-27",
+    "precipMm": 16.93,
+    "tMaxC": 31.79,
+    "tMeanC": 28.74,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-07-28",
+    "precipMm": 4.06,
+    "tMaxC": 31.73,
+    "tMeanC": 28.54,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-07-29",
+    "precipMm": 1.11,
+    "tMaxC": 32.09,
+    "tMeanC": 28.76,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2021-07-30",
+    "precipMm": 2.54,
+    "tMaxC": 33.26,
+    "tMeanC": 30.18,
+    "rootZoneWetness": 0.9
+  },
+  {
+    "date": "2021-07-31",
+    "precipMm": 3.09,
+    "tMaxC": 33.3,
+    "tMeanC": 29.61,
+    "rootZoneWetness": 0.9
+  },
+  {
+    "date": "2021-08-01",
+    "precipMm": 0.95,
+    "tMaxC": 33.69,
+    "tMeanC": 29.56,
+    "rootZoneWetness": 0.89
+  },
+  {
+    "date": "2021-08-02",
+    "precipMm": 0.92,
+    "tMaxC": 33.84,
+    "tMeanC": 29.72,
+    "rootZoneWetness": 0.89
+  },
+  {
+    "date": "2021-08-03",
+    "precipMm": 2.9,
+    "tMaxC": 33.04,
+    "tMeanC": 29.19,
+    "rootZoneWetness": 0.88
+  },
+  {
+    "date": "2021-08-04",
+    "precipMm": 2.25,
+    "tMaxC": 31.96,
+    "tMeanC": 28.52,
+    "rootZoneWetness": 0.87
+  },
+  {
+    "date": "2021-08-05",
+    "precipMm": 4.39,
+    "tMaxC": 31.73,
+    "tMeanC": 28.04,
+    "rootZoneWetness": 0.87
+  },
+  {
+    "date": "2021-08-06",
+    "precipMm": 0.12,
+    "tMaxC": 33.31,
+    "tMeanC": 28.96,
+    "rootZoneWetness": 0.87
+  },
+  {
+    "date": "2021-08-07",
+    "precipMm": 0,
+    "tMaxC": 33.68,
+    "tMeanC": 29.59,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2021-08-08",
+    "precipMm": 0,
+    "tMaxC": 33.56,
+    "tMeanC": 29.38,
+    "rootZoneWetness": 0.85
+  },
+  {
+    "date": "2021-08-09",
+    "precipMm": 8.08,
+    "tMaxC": 34.15,
+    "tMeanC": 29.28,
+    "rootZoneWetness": 0.84
+  },
+  {
+    "date": "2021-08-10",
+    "precipMm": 28.01,
+    "tMaxC": 30.68,
+    "tMeanC": 27.35,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2021-08-11",
+    "precipMm": 34.23,
+    "tMaxC": 31.2,
+    "tMeanC": 27.87,
+    "rootZoneWetness": 0.9
+  },
+  {
+    "date": "2021-08-12",
+    "precipMm": 28.3,
+    "tMaxC": 28.47,
+    "tMeanC": 27.24,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-08-13",
+    "precipMm": 31.35,
+    "tMaxC": 32.23,
+    "tMeanC": 28.63,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-08-14",
+    "precipMm": 25.02,
+    "tMaxC": 30,
+    "tMeanC": 26.59,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-08-15",
+    "precipMm": 15.41,
+    "tMaxC": 30,
+    "tMeanC": 26.75,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-08-16",
+    "precipMm": 3.68,
+    "tMaxC": 31.19,
+    "tMeanC": 27.7,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-08-17",
+    "precipMm": 12,
+    "tMaxC": 29.46,
+    "tMeanC": 27.06,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2021-08-18",
+    "precipMm": 2.29,
+    "tMaxC": 31.57,
+    "tMeanC": 27.98,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-08-19",
+    "precipMm": 5.14,
+    "tMaxC": 31.49,
+    "tMeanC": 27.67,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-08-20",
+    "precipMm": 2.49,
+    "tMaxC": 31.71,
+    "tMeanC": 27.91,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2021-08-21",
+    "precipMm": 1.47,
+    "tMaxC": 32.59,
+    "tMeanC": 29.23,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-08-22",
+    "precipMm": 0.82,
+    "tMaxC": 33.71,
+    "tMeanC": 29.59,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2021-08-23",
+    "precipMm": 2.18,
+    "tMaxC": 31.6,
+    "tMeanC": 28.55,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2021-08-24",
+    "precipMm": 15.02,
+    "tMaxC": 32.21,
+    "tMeanC": 28.49,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2021-08-25",
+    "precipMm": 7.02,
+    "tMaxC": 31.43,
+    "tMeanC": 28.06,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-08-26",
+    "precipMm": 5.76,
+    "tMaxC": 32.61,
+    "tMeanC": 28.48,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2021-08-27",
+    "precipMm": 12.77,
+    "tMaxC": 31.64,
+    "tMeanC": 27.83,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-08-28",
+    "precipMm": 1.38,
+    "tMaxC": 30.08,
+    "tMeanC": 27.12,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2021-08-29",
+    "precipMm": 0.14,
+    "tMaxC": 33.27,
+    "tMeanC": 29.14,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2021-08-30",
+    "precipMm": 0.01,
+    "tMaxC": 33.3,
+    "tMeanC": 29.86,
+    "rootZoneWetness": 0.9
+  },
+  {
+    "date": "2021-08-31",
+    "precipMm": 0,
+    "tMaxC": 33.49,
+    "tMeanC": 29.41,
+    "rootZoneWetness": 0.89
+  },
+  {
+    "date": "2021-09-01",
+    "precipMm": 0,
+    "tMaxC": 33.85,
+    "tMeanC": 29.63,
+    "rootZoneWetness": 0.89
+  },
+  {
+    "date": "2021-09-02",
+    "precipMm": 1.46,
+    "tMaxC": 33.22,
+    "tMeanC": 29.45,
+    "rootZoneWetness": 0.88
+  },
+  {
+    "date": "2021-09-03",
+    "precipMm": 0.81,
+    "tMaxC": 32.73,
+    "tMeanC": 29.24,
+    "rootZoneWetness": 0.88
+  },
+  {
+    "date": "2021-09-04",
+    "precipMm": 0.55,
+    "tMaxC": 33.27,
+    "tMeanC": 29.52,
+    "rootZoneWetness": 0.87
+  },
+  {
+    "date": "2021-09-05",
+    "precipMm": 2.02,
+    "tMaxC": 34.02,
+    "tMeanC": 29.54,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2021-09-06",
+    "precipMm": 0.77,
+    "tMaxC": 33.21,
+    "tMeanC": 28.43,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2021-09-07",
+    "precipMm": 2.32,
+    "tMaxC": 29.72,
+    "tMeanC": 25.8,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2021-09-08",
+    "precipMm": 0.42,
+    "tMaxC": 30.48,
+    "tMeanC": 26.01,
+    "rootZoneWetness": 0.85
+  },
+  {
+    "date": "2021-09-09",
+    "precipMm": 2.56,
+    "tMaxC": 31.41,
+    "tMeanC": 27.48,
+    "rootZoneWetness": 0.85
+  },
+  {
+    "date": "2021-09-10",
+    "precipMm": 1.23,
+    "tMaxC": 32.29,
+    "tMeanC": 28.08,
+    "rootZoneWetness": 0.84
+  },
+  {
+    "date": "2021-09-11",
+    "precipMm": 1.63,
+    "tMaxC": 32.6,
+    "tMeanC": 28.45,
+    "rootZoneWetness": 0.84
+  },
+  {
+    "date": "2021-09-12",
+    "precipMm": 1.1,
+    "tMaxC": 32.12,
+    "tMeanC": 27.69,
+    "rootZoneWetness": 0.83
+  },
+  {
+    "date": "2021-09-13",
+    "precipMm": 2.36,
+    "tMaxC": 30.82,
+    "tMeanC": 26.48,
+    "rootZoneWetness": 0.83
+  },
+  {
+    "date": "2021-09-14",
+    "precipMm": 0.72,
+    "tMaxC": 30.31,
+    "tMeanC": 26.1,
+    "rootZoneWetness": 0.82
+  },
+  {
+    "date": "2021-09-15",
+    "precipMm": 0,
+    "tMaxC": 29.8,
+    "tMeanC": 25.17,
+    "rootZoneWetness": 0.82
+  },
+  {
+    "date": "2021-09-16",
+    "precipMm": 0,
+    "tMaxC": 30.06,
+    "tMeanC": 24.94,
+    "rootZoneWetness": 0.81
+  },
+  {
+    "date": "2021-09-17",
+    "precipMm": 0,
+    "tMaxC": 30.93,
+    "tMeanC": 25.27,
+    "rootZoneWetness": 0.8
+  },
+  {
+    "date": "2021-09-18",
+    "precipMm": 0,
+    "tMaxC": 32.18,
+    "tMeanC": 26.61,
+    "rootZoneWetness": 0.8
+  },
+  {
+    "date": "2021-09-19",
+    "precipMm": 0.98,
+    "tMaxC": 33.11,
+    "tMeanC": 28,
+    "rootZoneWetness": 0.79
+  },
+  {
+    "date": "2021-09-20",
+    "precipMm": 5.72,
+    "tMaxC": 28.31,
+    "tMeanC": 25.41,
+    "rootZoneWetness": 0.79
+  },
+  {
+    "date": "2021-09-21",
+    "precipMm": 0,
+    "tMaxC": 30.5,
+    "tMeanC": 25.37,
+    "rootZoneWetness": 0.79
+  },
+  {
+    "date": "2021-09-22",
+    "precipMm": 0,
+    "tMaxC": 31.75,
+    "tMeanC": 25.65,
+    "rootZoneWetness": 0.79
+  },
+  {
+    "date": "2021-09-23",
+    "precipMm": 0.01,
+    "tMaxC": 32.33,
+    "tMeanC": 26.26,
+    "rootZoneWetness": 0.78
+  },
+  {
+    "date": "2021-09-24",
+    "precipMm": 0.01,
+    "tMaxC": 32.29,
+    "tMeanC": 27.75,
+    "rootZoneWetness": 0.77
+  },
+  {
+    "date": "2021-09-25",
+    "precipMm": 0,
+    "tMaxC": 32.22,
+    "tMeanC": 27.4,
+    "rootZoneWetness": 0.77
+  },
+  {
+    "date": "2021-09-26",
+    "precipMm": 0,
+    "tMaxC": 33.2,
+    "tMeanC": 28.56,
+    "rootZoneWetness": 0.76
+  },
+  {
+    "date": "2021-09-27",
+    "precipMm": 0,
+    "tMaxC": 33.02,
+    "tMeanC": 28.21,
+    "rootZoneWetness": 0.76
+  },
+  {
+    "date": "2021-09-28",
+    "precipMm": 0.01,
+    "tMaxC": 31.98,
+    "tMeanC": 26.71,
+    "rootZoneWetness": 0.75
+  },
+  {
+    "date": "2021-09-29",
+    "precipMm": 5.95,
+    "tMaxC": 29.12,
+    "tMeanC": 25.14,
+    "rootZoneWetness": 0.75
+  },
+  {
+    "date": "2021-09-30",
+    "precipMm": 1.31,
+    "tMaxC": 29.66,
+    "tMeanC": 24.93,
+    "rootZoneWetness": 0.76
+  },
+  {
+    "date": "2022-06-01",
+    "precipMm": 10.07,
+    "tMaxC": 28.75,
+    "tMeanC": 25.49,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2022-06-02",
+    "precipMm": 30.75,
+    "tMaxC": 27.59,
+    "tMeanC": 25.39,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2022-06-03",
+    "precipMm": 19.88,
+    "tMaxC": 27.73,
+    "tMeanC": 25.73,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-06-04",
+    "precipMm": 20.98,
+    "tMaxC": 28.11,
+    "tMeanC": 26.25,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-06-05",
+    "precipMm": 64.86,
+    "tMaxC": 28.82,
+    "tMeanC": 26.28,
+    "rootZoneWetness": 0.99
+  },
+  {
+    "date": "2022-06-06",
+    "precipMm": 0.11,
+    "tMaxC": 30.65,
+    "tMeanC": 26.68,
+    "rootZoneWetness": 0.98
+  },
+  {
+    "date": "2022-06-07",
+    "precipMm": 0,
+    "tMaxC": 32.18,
+    "tMeanC": 26.76,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-06-08",
+    "precipMm": 1.15,
+    "tMaxC": 30.18,
+    "tMeanC": 25.49,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-06-09",
+    "precipMm": 5.98,
+    "tMaxC": 28.8,
+    "tMeanC": 24.69,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-06-10",
+    "precipMm": 22.05,
+    "tMaxC": 30.01,
+    "tMeanC": 25.64,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-06-11",
+    "precipMm": 1.11,
+    "tMaxC": 26.59,
+    "tMeanC": 23.16,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-06-12",
+    "precipMm": 17.16,
+    "tMaxC": 26.5,
+    "tMeanC": 22.66,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-06-13",
+    "precipMm": 8.12,
+    "tMaxC": 25.82,
+    "tMeanC": 22.63,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-06-14",
+    "precipMm": 0.64,
+    "tMaxC": 29.15,
+    "tMeanC": 24.87,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-06-15",
+    "precipMm": 0.14,
+    "tMaxC": 30.01,
+    "tMeanC": 25.75,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2022-06-16",
+    "precipMm": 0,
+    "tMaxC": 29.36,
+    "tMeanC": 25.53,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2022-06-17",
+    "precipMm": 9.17,
+    "tMaxC": 29.12,
+    "tMeanC": 25.52,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2022-06-18",
+    "precipMm": 48.7,
+    "tMaxC": 27.77,
+    "tMeanC": 25.41,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2022-06-19",
+    "precipMm": 142.35,
+    "tMaxC": 27.06,
+    "tMeanC": 25.13,
+    "rootZoneWetness": 0.98
+  },
+  {
+    "date": "2022-06-20",
+    "precipMm": 38.8,
+    "tMaxC": 30.05,
+    "tMeanC": 26.51,
+    "rootZoneWetness": 0.99
+  },
+  {
+    "date": "2022-06-21",
+    "precipMm": 9.69,
+    "tMaxC": 30.7,
+    "tMeanC": 27.29,
+    "rootZoneWetness": 0.99
+  },
+  {
+    "date": "2022-06-22",
+    "precipMm": 12.07,
+    "tMaxC": 28.88,
+    "tMeanC": 26.24,
+    "rootZoneWetness": 0.98
+  },
+  {
+    "date": "2022-06-23",
+    "precipMm": 1.12,
+    "tMaxC": 31.74,
+    "tMeanC": 28.14,
+    "rootZoneWetness": 0.98
+  },
+  {
+    "date": "2022-06-24",
+    "precipMm": 2.62,
+    "tMaxC": 29.65,
+    "tMeanC": 27.46,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-06-25",
+    "precipMm": 1.78,
+    "tMaxC": 31.1,
+    "tMeanC": 27.54,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-06-26",
+    "precipMm": 0.01,
+    "tMaxC": 31.3,
+    "tMeanC": 28.46,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-06-27",
+    "precipMm": 0,
+    "tMaxC": 32.24,
+    "tMeanC": 28.74,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-06-28",
+    "precipMm": 7.54,
+    "tMaxC": 31.84,
+    "tMeanC": 28.41,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2022-06-29",
+    "precipMm": 56.41,
+    "tMaxC": 29.58,
+    "tMeanC": 27.51,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-06-30",
+    "precipMm": 33.23,
+    "tMaxC": 28.36,
+    "tMeanC": 25.92,
+    "rootZoneWetness": 0.99
+  },
+  {
+    "date": "2022-07-01",
+    "precipMm": 0.55,
+    "tMaxC": 31.11,
+    "tMeanC": 27.57,
+    "rootZoneWetness": 0.98
+  },
+  {
+    "date": "2022-07-02",
+    "precipMm": 0.18,
+    "tMaxC": 31.86,
+    "tMeanC": 28.06,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-07-03",
+    "precipMm": 0.8,
+    "tMaxC": 30.4,
+    "tMeanC": 27.72,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-07-04",
+    "precipMm": 2.65,
+    "tMaxC": 32.08,
+    "tMeanC": 28.62,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-07-05",
+    "precipMm": 10.64,
+    "tMaxC": 29.54,
+    "tMeanC": 27.82,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-07-06",
+    "precipMm": 6.64,
+    "tMaxC": 31.62,
+    "tMeanC": 28.53,
+    "rootZoneWetness": 0.97
+  },
+  {
+    "date": "2022-07-07",
+    "precipMm": 0.47,
+    "tMaxC": 31.66,
+    "tMeanC": 28.55,
+    "rootZoneWetness": 0.96
+  },
+  {
+    "date": "2022-07-08",
+    "precipMm": 0.57,
+    "tMaxC": 32.45,
+    "tMeanC": 29.09,
+    "rootZoneWetness": 0.95
+  },
+  {
+    "date": "2022-07-09",
+    "precipMm": 0.17,
+    "tMaxC": 32.6,
+    "tMeanC": 29.46,
+    "rootZoneWetness": 0.94
+  },
+  {
+    "date": "2022-07-10",
+    "precipMm": 0,
+    "tMaxC": 32.48,
+    "tMeanC": 29.66,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2022-07-11",
+    "precipMm": 0,
+    "tMaxC": 32.98,
+    "tMeanC": 30.02,
+    "rootZoneWetness": 0.93
+  },
+  {
+    "date": "2022-07-12",
+    "precipMm": 0,
+    "tMaxC": 34.19,
+    "tMeanC": 30.65,
+    "rootZoneWetness": 0.92
+  },
+  {
+    "date": "2022-07-13",
+    "precipMm": 0,
+    "tMaxC": 34.12,
+    "tMeanC": 30.4,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2022-07-14",
+    "precipMm": 0,
+    "tMaxC": 34.88,
+    "tMeanC": 30.74,
+    "rootZoneWetness": 0.91
+  },
+  {
+    "date": "2022-07-15",
+    "precipMm": 0,
+    "tMaxC": 35.15,
+    "tMeanC": 30.96,
+    "rootZoneWetness": 0.9
+  },
+  {
+    "date": "2022-07-16",
+    "precipMm": 0,
+    "tMaxC": 33.7,
+    "tMeanC": 30.45,
+    "rootZoneWetness": 0.89
+  },
+  {
+    "date": "2022-07-17",
+    "precipMm": 15.57,
+    "tMaxC": 32.98,
+    "tMeanC": 29.75,
+    "rootZoneWetness": 0.89
+  },
+  {
+    "date": "2022-07-18",
+    "precipMm": 6.31,
+    "tMaxC": 32.25,
+    "tMeanC": 29.32,
+    "rootZoneWetness": 0.9
+  },
+  {
+    "date": "2022-07-19",
+    "precipMm": 4.37,
+    "tMaxC": 31.61,
+    "tMeanC": 28.74,
+    "rootZoneWetness": 0.9
+  },
+  {
+    "date": "2022-07-20",
+    "precipMm": 3.12,
+    "tMaxC": 31.47,
+    "tMeanC": 28.72,
+    "rootZoneWetness": 0.89
+  },
+  {
+    "date": "2022-07-21",
+    "precipMm": 0.2,
+    "tMaxC": 32.64,
+    "tMeanC": 29.41,
+    "rootZoneWetness": 0.89
+  },
+  {
+    "date": "2022-07-22",
+    "precipMm": 0.01,
+    "tMaxC": 33.13,
+    "tMeanC": 29.94,
+    "rootZoneWetness": 0.88
+  },
+  {
+    "date": "2022-07-23",
+    "precipMm": 0.56,
+    "tMaxC": 34.56,
+    "tMeanC": 30.74,
+    "rootZoneWetness": 0.87
+  },
+  {
+    "date": "2022-07-24",
+    "precipMm": 0.41,
+    "tMaxC": 32.34,
+    "tMeanC": 29.83,
+    "rootZoneWetness": 0.87
+  },
+  {
+    "date": "2022-07-25",
+    "precipMm": 1.64,
+    "tMaxC": 33.72,
+    "tMeanC": 30.7,
+    "rootZoneWetness": 0.87
+  },
+  {
+    "date": "2022-07-26",
+    "precipMm": 0.94,
+    "tMaxC": 33.05,
+    "tMeanC": 29.5,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2022-07-27",
+    "precipMm": 0.26,
+    "tMaxC": 33.03,
+    "tMeanC": 29.75,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2022-07-28",
+    "precipMm": 2.5,
+    "tMaxC": 33.29,
+    "tMeanC": 30.42,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2022-07-29",
+    "precipMm": 5.01,
+    "tMaxC": 33.1,
+    "tMeanC": 29.62,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2022-07-30",
+    "precipMm": 2.6,
+    "tMaxC": 32.5,
+    "tMeanC": 29.19,
+    "rootZoneWetness": 0.86
+  },
+  {
+    "date": "2022-07-31",
+    "precipMm": 0.29,
+    "tMaxC": 32.96,
+    "tMeanC": 29.97,
+    "rootZoneWetness": 0.85
+  },
+  {
+    "date": "2022-08-01",
+    "precipMm": 0.5,
+    "tMaxC": 34.46,
+    "tMeanC": 30.83,
+    "rootZoneWetness": 0.84
+  },
+  {
+    "date": "2022-08-02",
+    "precipMm": 1.59,
+    "tMaxC": 34.6,
+    "tMeanC": 31.13,
+    "rootZoneWetness": 0.84
+  },
+  {
+    "date": "2022-08-03",
+    "precipMm": 0.37,
+    "tMaxC": 33.62,
+    "tMeanC": 30.23,
+    "rootZoneWetness": 0.83
+  },
+  {
+    "date": "2022-08-04",
+    "precipMm": 0.2,
+    "tMaxC": 34.3,
+    "tMeanC": 31.04,
+    "rootZoneWetness": 0.82
+  },
+  {
+    "date": "2022-08-05",
+    "precipMm": 0.17,
+    "tMaxC": 33.18,
+    "tMeanC": 30.01,
+    "rootZoneWetness": 0.81
+  },
+  {
+    "date": "2022-08-06",
+    "precipMm": 3.97,
+    "tMaxC": 32.25,
+    "tMeanC": 29.43,
+    "rootZoneWetness": 0.81
+  },
+  {
+    "date": "2022-08-07",
+    "precipMm": 1.52,
+    "tMaxC": 33.64,
+    "tMeanC": 29.8,
+    "rootZoneWetness": 0.81
+  },
+  {
+    "date": "2022-08-08",
+    "precipMm": 0.05,
+    "tMaxC": 33.44,
+    "tMeanC": 29.8,
+    "rootZoneWetness": 0.8
+  },
+  {
+    "date": "2022-08-09",
+    "precipMm": 0,
+    "tMaxC": 33.91,
+    "tMeanC": 30.5,
+    "rootZoneWetness": 0.79
+  },
+  {
+    "date": "2022-08-10",
+    "precipMm": 0,
+    "tMaxC": 34.86,
+    "tMeanC": 31.26,
+    "rootZoneWetness": 0.78
+  },
+  {
+    "date": "2022-08-11",
+    "precipMm": 0,
+    "tMaxC": 33.11,
+    "tMeanC": 30.8,
+    "rootZoneWetness": 0.78
+  },
+  {
+    "date": "2022-08-12",
+    "precipMm": 0,
+    "tMaxC": 33.96,
+    "tMeanC": 30.89,
+    "rootZoneWetness": 0.77
+  },
+  {
+    "date": "2022-08-13",
+    "precipMm": 0,
+    "tMaxC": 33.88,
+    "tMeanC": 30.83,
+    "rootZoneWetness": 0.77
+  },
+  {
+    "date": "2022-08-14",
+    "precipMm": 0.28,
+    "tMaxC": 34.03,
+    "tMeanC": 30.66,
+    "rootZoneWetness": 0.76
+  },
+  {
+    "date": "2022-08-15",
+    "precipMm": 0.01,
+    "tMaxC": 35.78,
+    "tMeanC": 31.59,
+    "rootZoneWetness": 0.76
+  },
+  {
+    "date": "2022-08-16",
+    "precipMm": 0,
+    "tMaxC": 33.61,
+    "tMeanC": 30.18,
+    "rootZoneWetness": 0.75
+  },
+  {
+    "date": "2022-08-17",
+    "precipMm": 0.78,
+    "tMaxC": 32.85,
+    "tMeanC": 29.48,
+    "rootZoneWetness": 0.75
+  },
+  {
+    "date": "2022-08-18",
+    "precipMm": 0.21,
+    "tMaxC": 34.7,
+    "tMeanC": 30.42,
+    "rootZoneWetness": 0.74
+  },
+  {
+    "date": "2022-08-19",
+    "precipMm": 0,
+    "tMaxC": 33.71,
+    "tMeanC": 30.96,
+    "rootZoneWetness": 0.74
+  },
+  {
+    "date": "2022-08-20",
+    "precipMm": 0,
+    "tMaxC": 33.31,
+    "tMeanC": 29.94,
+    "rootZoneWetness": 0.73
+  },
+  {
+    "date": "2022-08-21",
+    "precipMm": 0,
+    "tMaxC": 34.08,
+    "tMeanC": 30.25,
+    "rootZoneWetness": 0.73
+  },
+  {
+    "date": "2022-08-22",
+    "precipMm": 0,
+    "tMaxC": 35.52,
+    "tMeanC": 31.49,
+    "rootZoneWetness": 0.72
+  },
+  {
+    "date": "2022-08-23",
+    "precipMm": 0.35,
+    "tMaxC": 32.59,
+    "tMeanC": 30.02,
+    "rootZoneWetness": 0.71
+  },
+  {
+    "date": "2022-08-24",
+    "precipMm": 0.35,
+    "tMaxC": 34.67,
+    "tMeanC": 30.24,
+    "rootZoneWetness": 0.71
+  },
+  {
+    "date": "2022-08-25",
+    "precipMm": 0.55,
+    "tMaxC": 35.43,
+    "tMeanC": 31.11,
+    "rootZoneWetness": 0.71
+  },
+  {
+    "date": "2022-08-26",
+    "precipMm": 2.04,
+    "tMaxC": 33.99,
+    "tMeanC": 30.42,
+    "rootZoneWetness": 0.7
+  },
+  {
+    "date": "2022-08-27",
+    "precipMm": 6.02,
+    "tMaxC": 33.82,
+    "tMeanC": 29.82,
+    "rootZoneWetness": 0.7
+  },
+  {
+    "date": "2022-08-28",
+    "precipMm": 3.38,
+    "tMaxC": 33.37,
+    "tMeanC": 28.92,
+    "rootZoneWetness": 0.71
+  },
+  {
+    "date": "2022-08-29",
+    "precipMm": 2.83,
+    "tMaxC": 35.21,
+    "tMeanC": 30.06,
+    "rootZoneWetness": 0.71
+  },
+  {
+    "date": "2022-08-30",
+    "precipMm": 1.16,
+    "tMaxC": 33.35,
+    "tMeanC": 28.45,
+    "rootZoneWetness": 0.7
+  },
+  {
+    "date": "2022-08-31",
+    "precipMm": 0.47,
+    "tMaxC": 31.01,
+    "tMeanC": 25.75,
+    "rootZoneWetness": 0.7
+  },
+  {
+    "date": "2022-09-01",
+    "precipMm": 0.86,
+    "tMaxC": 30.08,
+    "tMeanC": 24.84,
+    "rootZoneWetness": 0.69
+  },
+  {
+    "date": "2022-09-02",
+    "precipMm": 0.2,
+    "tMaxC": 29.6,
+    "tMeanC": 24.72,
+    "rootZoneWetness": 0.69
+  },
+  {
+    "date": "2022-09-03",
+    "precipMm": 0.92,
+    "tMaxC": 30.96,
+    "tMeanC": 25.37,
+    "rootZoneWetness": 0.68
+  },
+  {
+    "date": "2022-09-04",
+    "precipMm": 1.49,
+    "tMaxC": 28.56,
+    "tMeanC": 24.22,
+    "rootZoneWetness": 0.68
+  },
+  {
+    "date": "2022-09-05",
+    "precipMm": 0.05,
+    "tMaxC": 31.16,
+    "tMeanC": 25.66,
+    "rootZoneWetness": 0.68
+  },
+  {
+    "date": "2022-09-06",
+    "precipMm": 0,
+    "tMaxC": 34.02,
+    "tMeanC": 26.23,
+    "rootZoneWetness": 0.67
+  },
+  {
+    "date": "2022-09-07",
+    "precipMm": 0,
+    "tMaxC": 34.66,
+    "tMeanC": 27.93,
+    "rootZoneWetness": 0.67
+  },
+  {
+    "date": "2022-09-08",
+    "precipMm": 0,
+    "tMaxC": 32.54,
+    "tMeanC": 26.34,
+    "rootZoneWetness": 0.66
+  },
+  {
+    "date": "2022-09-09",
+    "precipMm": 0,
+    "tMaxC": 33.26,
+    "tMeanC": 26.85,
+    "rootZoneWetness": 0.66
+  },
+  {
+    "date": "2022-09-10",
+    "precipMm": 0,
+    "tMaxC": 30.24,
+    "tMeanC": 25.56,
+    "rootZoneWetness": 0.66
+  },
+  {
+    "date": "2022-09-11",
+    "precipMm": 0,
+    "tMaxC": 30.4,
+    "tMeanC": 24.76,
+    "rootZoneWetness": 0.66
+  },
+  {
+    "date": "2022-09-12",
+    "precipMm": 0,
+    "tMaxC": 32.84,
+    "tMeanC": 26.2,
+    "rootZoneWetness": 0.66
+  },
+  {
+    "date": "2022-09-13",
+    "precipMm": 1.09,
+    "tMaxC": 31.87,
+    "tMeanC": 25.71,
+    "rootZoneWetness": 0.65
+  },
+  {
+    "date": "2022-09-14",
+    "precipMm": 1.79,
+    "tMaxC": 30.91,
+    "tMeanC": 25.29,
+    "rootZoneWetness": 0.65
+  },
+  {
+    "date": "2022-09-15",
+    "precipMm": 0.36,
+    "tMaxC": 30.6,
+    "tMeanC": 25.87,
+    "rootZoneWetness": 0.65
+  },
+  {
+    "date": "2022-09-16",
+    "precipMm": 0.07,
+    "tMaxC": 33.45,
+    "tMeanC": 27.36,
+    "rootZoneWetness": 0.65
+  },
+  {
+    "date": "2022-09-17",
+    "precipMm": 0,
+    "tMaxC": 34.21,
+    "tMeanC": 27.13,
+    "rootZoneWetness": 0.65
+  },
+  {
+    "date": "2022-09-18",
+    "precipMm": 0,
+    "tMaxC": 33.37,
+    "tMeanC": 26.65,
+    "rootZoneWetness": 0.64
+  },
+  {
+    "date": "2022-09-19",
+    "precipMm": 0,
+    "tMaxC": 33.91,
+    "tMeanC": 26.33,
+    "rootZoneWetness": 0.64
+  },
+  {
+    "date": "2022-09-20",
+    "precipMm": 0,
+    "tMaxC": 31.33,
+    "tMeanC": 23.7,
+    "rootZoneWetness": 0.64
+  },
+  {
+    "date": "2022-09-21",
+    "precipMm": 0,
+    "tMaxC": 31.21,
+    "tMeanC": 23.5,
+    "rootZoneWetness": 0.64
+  },
+  {
+    "date": "2022-09-22",
+    "precipMm": 0,
+    "tMaxC": 29.74,
+    "tMeanC": 23.85,
+    "rootZoneWetness": 0.64
+  },
+  {
+    "date": "2022-09-23",
+    "precipMm": 0,
+    "tMaxC": 32.27,
+    "tMeanC": 24.94,
+    "rootZoneWetness": 0.63
+  },
+  {
+    "date": "2022-09-24",
+    "precipMm": 0,
+    "tMaxC": 29.69,
+    "tMeanC": 23.29,
+    "rootZoneWetness": 0.63
+  },
+  {
+    "date": "2022-09-25",
+    "precipMm": 0,
+    "tMaxC": 31.61,
+    "tMeanC": 23.95,
+    "rootZoneWetness": 0.63
+  },
+  {
+    "date": "2022-09-26",
+    "precipMm": 0,
+    "tMaxC": 33.69,
+    "tMeanC": 25.88,
+    "rootZoneWetness": 0.63
+  },
+  {
+    "date": "2022-09-27",
+    "precipMm": 0,
+    "tMaxC": 34.32,
+    "tMeanC": 26.82,
+    "rootZoneWetness": 0.63
+  },
+  {
+    "date": "2022-09-28",
+    "precipMm": 0,
+    "tMaxC": 33.41,
+    "tMeanC": 26.42,
+    "rootZoneWetness": 0.62
+  },
+  {
+    "date": "2022-09-29",
+    "precipMm": 0,
+    "tMaxC": 34.47,
+    "tMeanC": 26.88,
+    "rootZoneWetness": 0.62
+  },
+  {
+    "date": "2022-09-30",
+    "precipMm": 0,
+    "tMaxC": 36.57,
+    "tMeanC": 29.25,
+    "rootZoneWetness": 0.62
+  }
+]

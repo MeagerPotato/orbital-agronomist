@@ -13,6 +13,10 @@
         "end": "2021-09-30"
       },
       "simulatedTodayRule": "Last cloud-free observation in mid/late August 2022",
+      "simulatedTodayWindow": {
+        "start": "2022-08-15",
+        "end": "2022-08-31"
+      },
       "profile": {
         "farmerName": "张师傅",
         "farmerNameEn": "Master Zhang",
@@ -47,6 +51,10 @@
         "end": "2020-06-30"
       },
       "simulatedTodayRule": "Last cloud-free observation in late April or May 2022",
+      "simulatedTodayWindow": {
+        "start": "2022-04-20",
+        "end": "2022-05-31"
+      },
       "profile": {
         "farmerName": "Mary Mutua",
         "farmerNameEn": "Mary Mutua",

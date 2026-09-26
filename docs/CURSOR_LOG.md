@@ -8,3 +8,4 @@ Submission evidence. One line per task: timestamp, what was built, which Cursor 
 - 2026-09-26 12:45 EDT — Added `data/farms.config.json` for both farms, `.env.example`, a stub README, and this log. Cursor feature: Agent.
 - 2026-09-26 13:04 EDT — Checked in the applied Supabase migration (`supabase/migrations/0001_init.sql`) and the Section 10 schedule in `docs/PLAN.md`. Cursor feature: Agent.
 - 2026-09-26 13:09 EDT — Added the publishable and secret Supabase clients, shared farm types, and a rerunnable `scripts/seed-supabase.ts` that waits for `farm.json`. Cursor feature: Agent.
+- 2026-09-26 14:36 EDT — Built the cn-rice-2022 Sentinel-2 NDVI series, NASA POWER weather, and farm.json, and printed the summary table. Cursor feature: Agent.
