@@ -94,6 +94,9 @@ export class VoiceSession {
   private checking = false;
   private reconnecting = false;
   private sessionCap: ReturnType<typeof setTimeout> | null = null;
+  private pushToTalk = false;
+  private talking = false;
+  private talkFrames = 0;
 
   constructor(callbacks: VoiceCallbacks) {
     this.callbacks = callbacks;
@@ -104,7 +107,11 @@ export class VoiceSession {
     createHandlers: (callId: string) => Record<string, ToolHandler>;
     /** Reuse a call row, such as a drought alert that is already ringing. */
     callId?: string;
+    pushToTalk?: boolean;
   }): Promise<void> {
+    this.pushToTalk = input.pushToTalk === true;
+    this.talking = false;
+    this.talkFrames = 0;
     if (this.ended) return;
     if (this.socket) return;
     this.bundle = input.bundle;
@@ -177,6 +184,36 @@ export class VoiceSession {
     this.audio.setMicEnabled(false);
   }
 
+  setPushToTalk(enabled: boolean): void {
+    if (this.pushToTalk === enabled) return;
+    if (this.talking) this.setTalking(false);
+    this.pushToTalk = enabled;
+    this.talking = false;
+    this.talkFrames = 0;
+    this.earlyAudio = [];
+    if (enabled && this.configured) this.send({ type: "input_audio_buffer.clear" });
+    if (this.configured) this.sendSessionUpdate();
+  }
+
+  setTalking(pressed: boolean): void {
+    if (!this.pushToTalk || this.ended) return;
+    if (pressed) {
+      if (this.talking) return;
+      this.talking = true;
+      this.talkFrames = 0;
+      this.audio.stopPlayback();
+      this.send({ type: "input_audio_buffer.clear" });
+      this.callbacks.onStatus("listening");
+      return;
+    }
+    if (!this.talking) return;
+    this.talking = false;
+    if (this.talkFrames === 0) return;
+    this.send({ type: "input_audio_buffer.commit" });
+    this.send({ type: "response.create" });
+    this.callbacks.onStatus("speaking");
+  }
+
   sendText(text: string): void {
     const trimmed = text.trim();
     if (!trimmed || !this.socket || this.socket.readyState !== WebSocket.OPEN || !this.configured) {
@@ -200,6 +237,8 @@ export class VoiceSession {
     this.clearSessionCap();
     if (this.ended) return;
     this.ended = true;
+    this.talking = false;
+    this.talkFrames = 0;
     if (this.flushTimer) clearTimeout(this.flushTimer);
     this.postEvent("status", { status: "ended" });
     await this.flushEvents();
@@ -303,7 +342,9 @@ export class VoiceSession {
         voice: bundle.voice,
         instructions: bundle.instructions,
         tools: sessionTools(bundle),
-        turn_detection: { type: "server_vad", silence_duration_ms: 900 },
+        turn_detection: this.pushToTalk
+          ? null
+          : { type: "server_vad", threshold: 0.6, silence_duration_ms: 900 },
         audio: {
           input: {
             format: { type: "audio/pcm", rate: 24000 },
@@ -321,15 +362,21 @@ export class VoiceSession {
   }
 
   private onMicChunk(base64: string): void {
+    if (this.pushToTalk && !this.talking) return;
     if (!this.configured || !this.socket || this.socket.readyState !== WebSocket.OPEN) {
       this.earlyAudio.push(base64);
       if (this.earlyAudio.length > MAX_EARLY_CHUNKS) this.earlyAudio.shift();
       return;
     }
+    this.talkFrames += 1;
     this.send({ type: "input_audio_buffer.append", audio: base64 });
   }
 
   private flushEarlyAudio(): void {
+    if (this.pushToTalk && !this.talking) {
+      this.earlyAudio = [];
+      return;
+    }
     const buffered = this.earlyAudio.splice(0);
     for (const chunk of buffered) {
       this.send({ type: "input_audio_buffer.append", audio: chunk });

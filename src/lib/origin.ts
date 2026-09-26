@@ -18,3 +18,16 @@ export function demoForced(): boolean {
   if (typeof window === "undefined") return false;
   return new URLSearchParams(window.location.search).get("demo") === "1";
 }
+
+export function pttForced(): boolean {
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get("ptt") === "1";
+}
+
+export function writePttParam(enabled: boolean): void {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  if (enabled) url.searchParams.set("ptt", "1");
+  else url.searchParams.delete("ptt");
+  window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+}

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { droughtAlertHeadline, droughtAlertOpener } from "@/lib/alerts";
 import { loadCallBundle, type CallBundle } from "@/lib/farm-data";
-import { demoForced } from "@/lib/origin";
+import { demoForced, pttForced, writePttParam } from "@/lib/origin";
 import { createToolHandlers } from "@/lib/tools";
 import type { Lang } from "@/lib/types";
 import { VoiceSession, type CallStatus } from "@/lib/voice";
@@ -31,13 +31,17 @@ export function CallScreen({ farmId }: { farmId: string }) {
   const [callId, setCallId] = useState("");
   const [draft, setDraft] = useState("");
   const [language, setLanguage] = useState<Lang>("zh");
+  const [ptt, setPtt] = useState(false);
+  const [holding, setHolding] = useState(false);
   const sessionRef = useRef<VoiceSession | null>(null);
+  const holdingRef = useRef(false);
   const answeringRef = useRef(false);
   const canRing = status === "idle" || status === "ended" || status === "error";
   const ring = useIncomingAlert(farmId, canRing);
   const incomingClip = useIncomingClip(callId);
 
   useEffect(() => {
+    setPtt(pttForced());
     let cancelled = false;
     loadCallBundle(farmId).then((loaded) => {
       if (cancelled) return;
@@ -121,8 +125,28 @@ export function CallScreen({ farmId }: { farmId: string }) {
     await session.start({
       bundle: sessionBundle,
       callId: existingCallId,
+      pushToTalk: ptt,
       createHandlers: (id) => createToolHandlers(sessionBundle, id, { demo: demoForced() }),
     });
+  }
+
+  function togglePtt() {
+    const next = !ptt;
+    setPtt(next);
+    writePttParam(next);
+    sessionRef.current?.setPushToTalk(next);
+    if (!next) {
+      holdingRef.current = false;
+      setHolding(false);
+    }
+  }
+
+  function setHold(pressed: boolean) {
+    if (!ptt || !sessionRef.current) return;
+    if (holdingRef.current === pressed) return;
+    holdingRef.current = pressed;
+    setHolding(pressed);
+    sessionRef.current.setTalking(pressed);
   }
 
   async function acceptAlert() {
@@ -166,9 +190,41 @@ export function CallScreen({ farmId }: { farmId: string }) {
   }
 
   async function hangUp() {
+    holdingRef.current = false;
+    setHolding(false);
     await sessionRef.current?.hangUp();
     sessionRef.current = null;
   }
+
+  useEffect(() => {
+    const live = status !== "idle" && status !== "ended" && status !== "error";
+    if (!ptt || !live) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.code !== "Space" || event.repeat) return;
+      const target = event.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+        return;
+      }
+      event.preventDefault();
+      setHold(true);
+    }
+    function onKeyUp(event: KeyboardEvent) {
+      if (event.code !== "Space") return;
+      event.preventDefault();
+      setHold(false);
+    }
+    function onBlur() {
+      setHold(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("blur", onBlur);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("blur", onBlur);
+    };
+  }, [ptt, status]);
 
   function sendDraft() {
     const text = draft.trim();
@@ -218,6 +274,31 @@ export function CallScreen({ farmId }: { farmId: string }) {
         </div>
       ) : null}
 
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-sm">Push to talk</span>
+        <button
+          type="button"
+          data-testid="ptt-toggle"
+          aria-pressed={ptt}
+          onClick={togglePtt}
+          className={`relative h-8 w-14 rounded-full border transition-colors ${
+            ptt ? "border-green-800 bg-green-800" : "border-neutral-400 bg-neutral-200 dark:bg-neutral-800"
+          }`}
+        >
+          <span className="sr-only">Push to talk {ptt ? "on" : "off"}</span>
+          <span
+            className={`absolute top-0.5 h-6 w-6 rounded-full bg-white transition-transform ${
+              ptt ? "left-7" : "left-0.5"
+            }`}
+          />
+        </button>
+      </div>
+      {ptt ? (
+        <p className="text-xs text-neutral-500">
+          Hold the button (or spacebar) to send your voice. Background noise is ignored until you press.
+        </p>
+      ) : null}
+
       <p className="text-sm text-neutral-600 dark:text-neutral-300">
         Replay of real {bundle.eventName} satellite and weather data. The farmer is fictional.
         Guidance is general; confirm with your local agricultural extension officer.
@@ -233,7 +314,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
       ) : null}
 
       <p data-testid="call-status" className="text-sm">
-        {statusLabel(status, mic)}
+        {statusLabel(status, mic, ptt)}
         {callId ? (
           <span data-testid="call-id" className="mt-1 block font-mono text-xs text-neutral-500">
             {callId}
@@ -301,6 +382,30 @@ export function CallScreen({ farmId }: { farmId: string }) {
         </button>
       ) : null}
 
+      {inCall && ptt ? (
+        <button
+          type="button"
+          data-testid="hold-to-talk"
+          aria-pressed={holding}
+          className={`select-none rounded-2xl px-4 py-8 text-xl font-semibold touch-none ${
+            holding
+              ? "bg-green-700 text-white"
+              : "bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100"
+          }`}
+          onContextMenu={(event) => event.preventDefault()}
+          onPointerDown={(event) => {
+            event.preventDefault();
+            event.currentTarget.setPointerCapture(event.pointerId);
+            setHold(true);
+          }}
+          onPointerUp={() => setHold(false)}
+          onPointerCancel={() => setHold(false)}
+          onLostPointerCapture={() => setHold(false)}
+        >
+          {holding ? "Listening…" : "Hold to talk"}
+        </button>
+      ) : null}
+
       {inCall ? (
         <form
           className="flex gap-2"
@@ -348,7 +453,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
   );
 }
 
-function statusLabel(status: CallStatus, mic: "unknown" | "on" | "denied"): string {
+function statusLabel(status: CallStatus, mic: "unknown" | "on" | "denied", ptt: boolean): string {
   const micNote = mic === "on" ? "Microphone on." : mic === "denied" ? "Microphone unavailable." : "";
   switch (status) {
     case "connecting":
@@ -356,7 +461,7 @@ function statusLabel(status: CallStatus, mic: "unknown" | "on" | "denied"): stri
     case "greeting":
       return `Greeting. ${micNote}`;
     case "listening":
-      return `Listening. ${micNote}`;
+      return ptt ? `Push to talk. ${micNote}` : `Listening. ${micNote}`;
     case "checking":
       return "Checking satellite data…";
     case "speaking":
