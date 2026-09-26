@@ -481,3 +481,15 @@ Farm B setting: "semi-arid eastern Kenya, red soil, small maize plots, acacia tr
 - **Cuts now in effect:** live-mode clip generation, NDVI imagery PNGs, Farm A English toggle. Keep: both farms, Farm B in English, Supabase + Realtime dashboard, QR code if time.
 - **New kill rule:** if voice is not talking by 3:30 PM ET, fall back to text chat + `/v1/tts`.
 - Targets: data + diagnosis 2:30 PM · voice 3:30 PM · clips 4:30 PM · UI 6:00 PM · deployed 6:45 PM · video recorded 8:00 PM · Devpost submitted 9:30 PM.
+
+### 10.1 Scope change (Sat 2:40 PM ET): ONE farm
+
+- **Drop `ke-maize-2022` entirely.** Remove it from `data/farms.config.json`, fixtures, UI, clip generation, and docs. Do not delete shared code paths; the app stays config-driven so more farms can be added later.
+- **`cn-rice-2022` now supports both `zh` and `en`** (English toggle is back in scope). English is the judge-facing demo language; Mandarin is the showcase.
+- Phase 1 for cn-rice-2022 is DONE (commit d680c42): NDVI −32% vs 2021, rain 21.6 mm vs 261.8 mm in the prior 30 days.
+- Clips: 3 videos (cn-rice-2022 topics) × narration in `zh` and `en` = 3 videos, 6 narrations.
+- Tab B: test the English call on `cn-rice-2022` instead of `ke-maize-2022`.
+
+## 11. Rubric alignment (Sat 3:15 PM ET)
+
+Read `docs/CHALLENGE.md` before starting any new feature. It holds the verbatim challenge brief, the criteria-to-feature map, and the ranked polish backlog (Section 4). Phase 8 changes: Cursor writes the README; Claude drafts the Devpost text at the end.
