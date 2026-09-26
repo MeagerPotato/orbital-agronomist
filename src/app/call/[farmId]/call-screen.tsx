@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { droughtAlertHeadline, droughtAlertOpener } from "@/lib/alerts";
+import { callCopy, localizeError, type CallCopy } from "@/lib/call-copy";
 import { loadCallBundle, type CallBundle } from "@/lib/farm-data";
 import { demoForced, pttForced, writePttParam } from "@/lib/origin";
 import { createToolHandlers } from "@/lib/tools";
@@ -41,11 +42,15 @@ export function CallScreen({ farmId }: { farmId: string }) {
   const incomingClip = useIncomingClip(callId);
 
   useEffect(() => {
+    document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
+  }, [language]);
+
+  useEffect(() => {
     setPtt(pttForced());
     let cancelled = false;
     loadCallBundle(farmId).then((loaded) => {
       if (cancelled) return;
-      if (!loaded) setLoadError("This farm is not configured.");
+      if (!loaded) setLoadError(callCopy.zh.farmMissing);
       else {
         setBundle(loaded);
         setLanguage(loaded.language);
@@ -233,11 +238,13 @@ export function CallScreen({ farmId }: { farmId: string }) {
     setDraft("");
   }
 
+  const copy = callCopy[language];
+
   if (loadError) {
     return <p className="p-8 text-center">{loadError}</p>;
   }
   if (!bundle) {
-    return <p className="p-8 text-center">Loading the field…</p>;
+    return <p className="p-8 text-center">{copy.loading}</p>;
   }
 
   const inCall = status !== "idle" && status !== "ended" && status !== "error";
@@ -247,16 +254,16 @@ export function CallScreen({ farmId }: { farmId: string }) {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-3 overflow-x-hidden px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
       <header className="space-y-1">
-        <p className="text-xs tracking-widest text-neutral-500 uppercase">Orbital Agronomist</p>
+        <p className="text-xs tracking-widest text-neutral-500 uppercase">{copy.brand}</p>
         <h1 className="text-2xl font-semibold">{bundle.profile.farmerName}</h1>
         <p className="text-sm text-neutral-600 dark:text-neutral-300">
-          {bundle.cropNames[language] || bundle.profile.crop} · {bundle.profile.region} · {language.toUpperCase()}
+          {bundle.cropNames[language] || bundle.profile.crop} · {bundle.profile.region} · {copy.languageBadge}
         </p>
         <p className="text-sm text-neutral-600 dark:text-neutral-300">{bundle.eventName}</p>
       </header>
 
       {bundle.profile.languages.length > 1 ? (
-        <div className="flex gap-2" role="group" aria-label="Language">
+        <div className="flex gap-2" role="group" aria-label={copy.languageGroup}>
           {bundle.profile.languages.map((option) => (
             <button
               key={option}
@@ -275,7 +282,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
       ) : null}
 
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm">Push to talk</span>
+        <span className="text-sm">{copy.pushToTalk}</span>
         <button
           type="button"
           data-testid="ptt-toggle"
@@ -285,7 +292,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
             ptt ? "border-green-800 bg-green-800" : "border-neutral-400 bg-neutral-200 dark:bg-neutral-800"
           }`}
         >
-          <span className="sr-only">Push to talk {ptt ? "on" : "off"}</span>
+          <span className="sr-only">{copy.pushToTalkState(ptt)}</span>
           <span
             className={`absolute top-0.5 h-6 w-6 rounded-full bg-white transition-transform ${
               ptt ? "left-7" : "left-0.5"
@@ -295,18 +302,20 @@ export function CallScreen({ farmId }: { farmId: string }) {
       </div>
       {ptt ? (
         <p className="text-xs text-neutral-500">
-          Hold the button (or spacebar) to send your voice. Background noise is ignored until you press.
+          {copy.pushToTalkHint}
         </p>
       ) : null}
 
       <p className="text-sm text-neutral-600 dark:text-neutral-300">
-        Replay of real {bundle.eventName} satellite and weather data. The farmer is fictional.
-        Guidance is general; confirm with your local agricultural extension officer.
+        {copy.disclaimer(bundle.eventName)}
       </p>
 
       {ringing ? (
         <IncomingAlert
           headline={droughtAlertHeadline(language)}
+          incomingLabel={copy.incomingCall}
+          declineLabel={copy.decline}
+          acceptLabel={copy.accept}
           busy={false}
           onAccept={() => void acceptAlert()}
           onDecline={() => void declineAlert()}
@@ -314,7 +323,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
       ) : null}
 
       <p data-testid="call-status" className="text-sm">
-        {statusLabel(status, mic, ptt)}
+        {statusLabel(copy, language, status, mic, ptt)}
         {callId ? (
           <span data-testid="call-id" className="mt-1 block font-mono text-xs text-neutral-500">
             {callId}
@@ -323,14 +332,14 @@ export function CallScreen({ farmId }: { farmId: string }) {
       </p>
       {mic === "denied" ? (
         <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm">
-          Microphone access was denied. Allow the mic in the browser, or type your message.
+          {copy.micDenied}
         </p>
       ) : null}
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="text-sm text-red-600">{localizeError(language, error)}</p> : null}
 
       {checking ? (
         <p data-testid="checking" className="text-sm font-medium">
-          Checking satellite data…
+          {copy.checking}
         </p>
       ) : null}
 
@@ -350,7 +359,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
         aria-live="polite"
       >
         {lines.length === 0 ? (
-          <p className="text-sm text-neutral-500">The call transcript will appear here.</p>
+          <p className="text-sm text-neutral-500">{copy.transcriptEmpty}</p>
         ) : (
           lines.map((line) => (
             <p
@@ -360,7 +369,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
               className={line.role === "user" ? "text-right" : "text-left"}
             >
               <span className="mb-1 block text-xs text-neutral-500">
-                {line.role === "user" ? "Farmer" : "Orbital Agronomist"}
+                {line.role === "user" ? copy.farmer : copy.assistant}
               </span>
               <span className="inline-block rounded-2xl bg-neutral-100 px-3 py-2 text-sm dark:bg-neutral-900">
                 {line.text}
@@ -370,7 +379,9 @@ export function CallScreen({ farmId }: { farmId: string }) {
         )}
       </div>
 
-      {incomingClip ? <IncomingClipCard clip={incomingClip} farmId={farmId} callId={callId} /> : null}
+      {incomingClip ? (
+        <IncomingClipCard clip={incomingClip} farmId={farmId} callId={callId} uiLanguage={language} />
+      ) : null}
 
       {status === "dropped" ? (
         <button
@@ -378,7 +389,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
           onClick={() => void reconnect()}
           className="rounded-full bg-amber-500 px-4 py-4 text-lg text-slate-950"
         >
-          Reconnect
+          {copy.reconnect}
         </button>
       ) : null}
 
@@ -402,7 +413,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
           onPointerCancel={() => setHold(false)}
           onLostPointerCapture={() => setHold(false)}
         >
-          {holding ? "Listening…" : "Hold to talk"}
+          {holding ? copy.listeningHold : copy.holdToTalk}
         </button>
       ) : null}
 
@@ -415,10 +426,10 @@ export function CallScreen({ farmId }: { farmId: string }) {
           }}
         >
           <input
-            aria-label="Type a message"
+            aria-label={copy.typeMessage}
             className="min-w-0 flex-1 rounded-md border px-3 py-2 text-sm"
             value={draft}
-            placeholder="Or type a message"
+            placeholder={copy.typePlaceholder}
             disabled={!canType}
             onChange={(event) => setDraft(event.target.value)}
           />
@@ -427,7 +438,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
             className="rounded-md border px-3 py-2 text-sm disabled:opacity-40"
             disabled={!canType || !draft.trim()}
           >
-            Send
+            {copy.send}
           </button>
         </form>
       ) : null}
@@ -438,7 +449,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
           onClick={() => void hangUp()}
           className="rounded-full bg-red-700 px-4 py-4 text-lg text-white"
         >
-          Hang up
+          {copy.hangUp}
         </button>
       ) : ringing ? null : (
         <button
@@ -446,33 +457,43 @@ export function CallScreen({ farmId }: { farmId: string }) {
           onClick={() => void startCall()}
           className="rounded-full bg-green-800 px-4 py-4 text-lg text-white"
         >
-          {status === "ended" || status === "error" ? "Call again" : "Start call"}
+          {status === "ended" || status === "error" ? copy.callAgain : copy.startCall}
         </button>
       )}
     </main>
   );
 }
 
-function statusLabel(status: CallStatus, mic: "unknown" | "on" | "denied", ptt: boolean): string {
-  const micNote = mic === "on" ? "Microphone on." : mic === "denied" ? "Microphone unavailable." : "";
+function statusLabel(
+  copy: CallCopy,
+  language: Lang,
+  status: CallStatus,
+  mic: "unknown" | "on" | "denied",
+  ptt: boolean,
+): string {
+  const micNote = mic === "on" ? copy.micOn : mic === "denied" ? copy.micUnavailable : "";
+  const withMic = (lead: string) => {
+    if (!micNote) return language === "en" ? `${lead} ` : lead;
+    return language === "en" ? `${lead} ${micNote}` : `${lead}${micNote}`;
+  };
   switch (status) {
     case "connecting":
-      return `Connecting the call. ${micNote}`;
+      return withMic(copy.connecting);
     case "greeting":
-      return `Greeting. ${micNote}`;
+      return withMic(copy.greeting);
     case "listening":
-      return ptt ? `Push to talk. ${micNote}` : `Listening. ${micNote}`;
+      return withMic(ptt ? copy.pushToTalkStatus : copy.listening);
     case "checking":
-      return "Checking satellite data…";
+      return copy.checking;
     case "speaking":
-      return "Speaking.";
+      return copy.speaking;
     case "dropped":
-      return "The voice connection dropped.";
+      return copy.dropped;
     case "ended":
-      return "Call ended.";
+      return copy.ended;
     case "error":
-      return "The call stopped.";
+      return copy.stopped;
     default:
-      return "Ready to call.";
+      return copy.ready;
   }
 }

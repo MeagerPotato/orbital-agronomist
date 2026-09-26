@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { callCopy, localizeFreshNote } from "@/lib/call-copy";
 import { clipPublicUrl } from "@/lib/clips";
+import type { Lang } from "@/lib/types";
 import { useFreshVideo } from "@/lib/use-fresh-video";
 
 export type IncomingClip = {
@@ -16,10 +18,12 @@ export function IncomingClipCard({
   clip,
   farmId,
   callId,
+  uiLanguage = "en",
 }: {
   clip: IncomingClip;
   farmId: string;
   callId: string;
+  uiLanguage?: Lang;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -31,6 +35,7 @@ export function IncomingClipCard({
     language: clip.language,
     videoPath: clip.video_path ?? "",
   });
+  const copy = callCopy[uiLanguage];
   const videoUrl = fresh.videoPath ? clipPublicUrl(fresh.videoPath) : "";
   const audioUrl = clip.audio_path ? clipPublicUrl(clip.audio_path) : "";
 
@@ -79,7 +84,7 @@ export function IncomingClipCard({
       data-testid="incoming-clip"
       className="overflow-hidden rounded-xl border border-amber-500/40 bg-neutral-950 text-white"
     >
-      <p className="px-3 py-2 text-sm font-medium">Video message received</p>
+      <p className="px-3 py-2 text-sm font-medium">{copy.videoReceived}</p>
       {videoUrl ? (
         <button type="button" className="relative block w-full" onClick={() => void playTogether()}>
           <video
@@ -92,24 +97,28 @@ export function IncomingClipCard({
           />
           {needsTap ? (
             <span className="absolute inset-0 flex items-center justify-center bg-black/40 text-sm">
-              Tap to play
+              {copy.tapToPlay}
             </span>
           ) : null}
         </button>
       ) : (
-        <p className="px-3 pb-3 text-sm">The clip file is missing.</p>
+        <p className="px-3 pb-3 text-sm">{copy.clipMissing}</p>
       )}
       {audioUrl ? <audio ref={audioRef} src={audioUrl} preload="auto" /> : null}
-      <FreshVideoControls fresh={fresh} />
+      <FreshVideoControls fresh={fresh} uiLanguage={uiLanguage} />
     </article>
   );
 }
 
 export function FreshVideoControls({
   fresh,
+  uiLanguage = "en",
 }: {
   fresh: ReturnType<typeof useFreshVideo>;
+  uiLanguage?: Lang;
 }) {
+  const copy = callCopy[uiLanguage];
+  const note = localizeFreshNote(uiLanguage, fresh.note);
   return (
     <div className="space-y-1 px-3 py-2">
       <button
@@ -119,11 +128,11 @@ export function FreshVideoControls({
         onClick={() => void fresh.generate()}
         className="rounded-full border border-white/40 px-3 py-1 text-sm text-white disabled:opacity-50"
       >
-        Generate a fresh video
+        {copy.generateFresh}
       </button>
-      {fresh.note ? (
+      {note ? (
         <p data-testid="fresh-video-status" className="text-sm text-amber-100">
-          {fresh.note}
+          {note}
         </p>
       ) : null}
     </div>

@@ -1,10 +1,16 @@
 export function IncomingAlert({
   headline,
+  incomingLabel,
+  declineLabel,
+  acceptLabel,
   busy,
   onAccept,
   onDecline,
 }: {
   headline: string;
+  incomingLabel: string;
+  declineLabel: string;
+  acceptLabel: string;
   busy: boolean;
   onAccept: () => void;
   onDecline: () => void;
@@ -18,7 +24,7 @@ export function IncomingAlert({
     >
       <span className="h-16 w-16 animate-pulse rounded-full bg-green-500" aria-hidden />
       <div>
-        <p className="text-xs tracking-[0.2em] text-slate-400 uppercase">Incoming call</p>
+        <p className="text-xs tracking-[0.2em] text-slate-400 uppercase">{incomingLabel}</p>
         <h2 id="incoming-alert-title" className="mt-2 text-xl font-semibold leading-snug">
           {headline}
         </h2>
@@ -30,7 +36,7 @@ export function IncomingAlert({
           disabled={busy}
           className="flex-1 rounded-full bg-red-700 py-4 text-lg disabled:opacity-60"
         >
-          Decline
+          {declineLabel}
         </button>
         <button
           type="button"
@@ -38,7 +44,7 @@ export function IncomingAlert({
           disabled={busy}
           className="flex-1 rounded-full bg-green-600 py-4 text-lg disabled:opacity-60"
         >
-          Accept
+          {acceptLabel}
         </button>
       </div>
     </section>

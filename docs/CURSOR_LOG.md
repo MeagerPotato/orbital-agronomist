@@ -29,3 +29,4 @@ Submission evidence. One line per task: timestamp, what was built, which Cursor 
 - 2026-09-26 18:41 EDT — Landing page hero: four Grok Imagine stills, a silent 6-second intro from the best one, and the dark home page. Cursor feature: Agent (browser).
 - 2026-09-26 18:38 EDT — Live Grok Imagine clips: Generate a fresh video on the call and dashboard cards, polled every 3 seconds, falling back to the saved clip after a failure or 150 seconds. Cursor feature: Agent (browser).
 - 2026-09-26 18:44 EDT — Fresh-video status checks use POST so the browser Origin passes the origin guard. Cursor feature: Agent (browser).
+- 2026-09-26 19:53 EDT — Call page UI strings for 中文 live in one dictionary, and /expo is a one-page Letter handout. Cursor feature: Agent (browser).
