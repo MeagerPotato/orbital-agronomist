@@ -100,6 +100,7 @@ export type FarmConfig = {
   };
   clipTopics: string[];
   greetings?: Partial<Record<Lang, string>>;
+  clipNarration?: Record<string, LocalizedText>;
 };
 
 export type VoiceTool = {

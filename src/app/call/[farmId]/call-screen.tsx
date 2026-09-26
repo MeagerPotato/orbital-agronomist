@@ -5,6 +5,8 @@ import { loadCallBundle, type CallBundle } from "@/lib/farm-data";
 import { createToolHandlers } from "@/lib/tools";
 import type { Lang } from "@/lib/types";
 import { VoiceSession, type CallStatus } from "@/lib/voice";
+import { IncomingClipCard } from "./incoming-clip";
+import { useIncomingClip } from "./use-incoming-clip";
 
 type TranscriptLine = {
   id: string;
@@ -26,6 +28,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
   const [draft, setDraft] = useState("");
   const [language, setLanguage] = useState<Lang>("zh");
   const sessionRef = useRef<VoiceSession | null>(null);
+  const incomingClip = useIncomingClip(callId);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,6 +72,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
     setError("");
     setLines([]);
     setTools([]);
+    setCallId("");
     const session = new VoiceSession({
       onStatus: (next) => {
         setStatus(next);
@@ -214,6 +218,8 @@ export function CallScreen({ farmId }: { farmId: string }) {
           ))
         )}
       </div>
+
+      {incomingClip ? <IncomingClipCard clip={incomingClip} /> : null}
 
       {inCall ? (
         <form

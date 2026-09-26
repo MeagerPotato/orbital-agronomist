@@ -25,6 +25,10 @@
         "region": "Sichuan / Chongqing / Jiangxi",
         "country": "China",
         "crop": "Mid-season rice",
+        "cropLocalized": {
+          "zh": "中稻",
+          "en": "mid-season rice"
+        },
         "languages": ["zh", "en"],
         "primaryLanguage": "zh",
         "event": {
@@ -48,6 +52,20 @@
           "irrigation_timing": "early-morning sun over the paddies; the farmer opens a small earthen channel gate so a shallow layer of water flows in",
           "prioritize_flowering_fields": "close-up of rice panicles in flower, then the farmer guiding water to the flowering plot first",
           "heat_stress_foliar_spray": "late afternoon, the farmer walks the paddy with a backpack sprayer, fine mist over the leaves"
+        }
+      },
+      "clipNarration": {
+        "irrigation_timing": {
+          "en": "If you still have water, open a small channel at dawn so a shallow layer covers the paddy. Confirm with your local agricultural station.",
+          "zh": "如果田里还有水，清晨把小沟打开，让一层浅水慢慢流进稻田，不要在最热的中午灌水。请先问当地农技站。"
+        },
+        "prioritize_flowering_fields": {
+          "en": "Give flowering rice the first water, then water the rest of the field if any remains. Confirm with your local agricultural station.",
+          "zh": "水不够的时候，先把水送到正在抽穗开花的田里，其他田块可以后浇，不要平均分。请先问当地农技站。"
+        },
+        "heat_stress_foliar_spray": {
+          "en": "Do not spray leaves in the midday heat. If a foliar spray is needed, wait until evening. Confirm with your local agricultural station.",
+          "zh": "最热的中午不要喷叶面。如果需要叶面补充，放到傍晚再喷，并按农技站说的用量。请先问当地农技站。"
         }
       }
     }
