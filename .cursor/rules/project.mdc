@@ -1,0 +1,36 @@
+---
+description: Orbital Agronomist build rules, demo farms, and data layout
+alwaysApply: true
+---
+
+# Orbital Agronomist
+
+Voice hotline for fictional smallholder farmers. Satellite and weather data are real. Each scenario replays a real past event.
+
+## Agent rules
+
+- Work one phase from `docs/PLAN.md` at a time. Stop when its acceptance criteria pass.
+- Commit after every task (`feat:`, `fix:`, `data:`, `docs:`). After every task, append one line to `docs/CURSOR_LOG.md`: timestamp, what was built, Cursor feature used.
+- Never expose `XAI_API_KEY` or `SUPABASE_SECRET_KEY` to the browser. The browser gets an xAI ephemeral token and the Supabase publishable key only. Privileged calls go through Next.js API routes.
+- Config-driven by farm. No farm-specific logic in components. A new farm is an entry in `data/farms.config.json` plus rerunning scripts.
+- Do not add dependencies beyond the plan's stack without asking.
+- When an xAI API detail is unclear, check https://docs.x.ai (append `.md` to the docs URL). Log unknown server event types in dev.
+- User-facing copy stays honest: farmers are fictional; Sentinel-2 and NASA POWER data are real; guidance is general.
+
+## Demo farms
+
+| id | farmer | languages | crop | event | window | baseline |
+|---|---|---|---|---|---|---|
+| `cn-rice-2022` | 张师傅 (Master Zhang) | `zh` primary, `en` toggle | Mid-season rice | 2022 Yangtze basin drought + heatwave | 2022-06-01 → 2022-09-30 | 2021, same window |
+| `ke-maize-2022` | Mary Mutua | `en` | Maize (with beans) | 2022 Horn of Africa drought (failed March–May long rains) | 2022-02-01 → 2022-06-30 | 2020, same window |
+
+Locations: Farm A is a rice cluster in Sichuan / Chongqing / Jiangxi. Farm B is smallholder maize in Machakos / Makueni / Kitui, eastern Kenya. Simulated today is the last cloud-free observation in mid/late Aug 2022 (A) or late Apr / May 2022 (B).
+
+Clip topics: A `irrigation_timing`, `prioritize_flowering_fields`, `heat_stress_foliar_spray`. B `mulching_soil_moisture`, `zai_pits_water_harvesting`, `drought_tolerant_varieties`.
+
+## Data layout
+
+- `data/farms.config.json` — per-farm config (polygon path, windows, languages, profile, clip topics)
+- `data/farms/{farmId}/field.geojson` — polygon Allen draws
+- `data/farms/{farmId}/farm.json` — built by scripts
+- `data/farms/{farmId}/diagnosis.json` — built by Grok
