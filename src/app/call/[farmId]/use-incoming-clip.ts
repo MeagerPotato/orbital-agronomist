@@ -14,8 +14,9 @@ export function useIncomingClip(callId: string) {
     if (!supabase) return;
     let cancelled = false;
 
+    const client = supabase;
     async function loadLatest() {
-      const { data } = await supabase
+      const { data } = await client
         .from("clips")
         .select("id, topic, language, video_path, audio_path")
         .eq("call_id", callId)
@@ -26,7 +27,7 @@ export function useIncomingClip(callId: string) {
     }
 
     void loadLatest();
-    const channel = supabase
+    const channel = client
       .channel(`call-clips-${callId}`)
       .on(
         "postgres_changes",

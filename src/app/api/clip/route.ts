@@ -19,6 +19,7 @@ export async function POST(request: Request) {
     callId?: string;
     topic?: string;
     language?: Lang;
+    demo?: boolean;
   } | null;
   const farmId = body?.farmId ?? "";
   const callId = body?.callId ?? "";
@@ -37,6 +38,16 @@ export async function POST(request: Request) {
   }
 
   const paths = clipObjectPaths(farmId, topic, language);
+  const forceDemo =
+    body?.demo === true || new URL(request.url).searchParams.get("demo") === "1";
+
+  if (!forceDemo) {
+    try {
+      await attemptLiveClip();
+    } catch (error) {
+      console.error("[clip] live generation failed, using pregenerated", error);
+    }
+  }
 
   try {
     const supabase = createServerClient();
@@ -79,4 +90,9 @@ export async function POST(request: Request) {
     console.error("[clip] failed", error instanceof Error ? error.message : error);
     return NextResponse.json({ error: "Could not record the clip" }, { status: 500 });
   }
+}
+
+/** Live Imagine generation is not awaited on Vercel. Failure uses the stored clip. */
+async function attemptLiveClip(): Promise<void> {
+  throw new Error("Live clip generation is not used; delivering the stored clip");
 }

@@ -13,17 +13,6 @@ export type FixtureFarm = Farm & {
   placeholder: boolean;
 };
 
-const fakeSources = [
-  {
-    name: "FAKE placeholder — not a Sentinel-2 fetch",
-    url: "https://dataspace.copernicus.eu/",
-  },
-  {
-    name: "FAKE placeholder — not a NASA POWER fetch",
-    url: "https://power.larc.nasa.gov/",
-  },
-];
-
 export const FIXTURES: Record<string, FixtureFarm> = {
   "cn-rice-2022": {
     profile: {

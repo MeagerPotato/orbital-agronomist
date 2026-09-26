@@ -24,10 +24,12 @@ export function IncomingClipCard({ clip }: { clip: IncomingClip }) {
     if (!video) return;
     let cancelled = false;
     async function start() {
+      const player = video;
+      if (!player) return;
       try {
-        video.currentTime = 0;
+        player.currentTime = 0;
         if (audio) audio.currentTime = 0;
-        await Promise.all([video.play(), audio ? audio.play() : Promise.resolve()]);
+        await Promise.all([player.play(), audio ? audio.play() : Promise.resolve()]);
         if (!cancelled) setNeedsTap(false);
       } catch {
         if (!cancelled) setNeedsTap(true);
@@ -70,7 +72,7 @@ export function IncomingClipCard({ clip }: { clip: IncomingClip }) {
             src={videoUrl}
             muted
             playsInline
-            loop={false}
+            onError={() => setNeedsTap(true)}
           />
           {needsTap ? (
             <span className="absolute inset-0 flex items-center justify-center bg-black/40 text-sm">

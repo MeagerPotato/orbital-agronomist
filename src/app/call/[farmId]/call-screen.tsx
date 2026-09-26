@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { loadCallBundle, type CallBundle } from "@/lib/farm-data";
+import { demoForced } from "@/lib/origin";
 import { createToolHandlers } from "@/lib/tools";
 import type { Lang } from "@/lib/types";
 import { VoiceSession, type CallStatus } from "@/lib/voice";
@@ -99,8 +100,12 @@ export function CallScreen({ farmId }: { farmId: string }) {
     }
     await session.start({
       bundle: fresh,
-      createHandlers: (id) => createToolHandlers(fresh, id),
+      createHandlers: (id) => createToolHandlers(fresh, id, { demo: demoForced() }),
     });
+  }
+
+  async function reconnect() {
+    await sessionRef.current?.reconnect();
   }
 
   async function hangUp() {
@@ -175,6 +180,11 @@ export function CallScreen({ farmId }: { farmId: string }) {
           </span>
         ) : null}
       </p>
+      {mic === "denied" ? (
+        <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm">
+          Microphone access was denied. Allow the mic in the browser, or type your message.
+        </p>
+      ) : null}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
       {checking ? (
@@ -220,6 +230,16 @@ export function CallScreen({ farmId }: { farmId: string }) {
       </div>
 
       {incomingClip ? <IncomingClipCard clip={incomingClip} /> : null}
+
+      {status === "dropped" ? (
+        <button
+          type="button"
+          onClick={() => void reconnect()}
+          className="rounded-full bg-amber-500 px-4 py-4 text-lg text-slate-950"
+        >
+          Reconnect
+        </button>
+      ) : null}
 
       {inCall ? (
         <form
@@ -281,6 +301,8 @@ function statusLabel(status: CallStatus, mic: "unknown" | "on" | "denied"): stri
       return "Checking satellite data…";
     case "speaking":
       return "Speaking.";
+    case "dropped":
+      return "The voice connection dropped.";
     case "ended":
       return "Call ended.";
     case "error":

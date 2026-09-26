@@ -1,3 +1,4 @@
+import { FarmActions } from "./farm-actions";
 import { listFarms } from "@/lib/farms";
 
 export default function Home() {
@@ -29,20 +30,7 @@ export default function Home() {
               <p className="mt-1 text-sm tracking-wide text-slate-400 uppercase">
                 {farm.profile.languages.map((language) => (language === "zh" ? "中文" : "English")).join(" · ")}
               </p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <a
-                  href={`/dashboard/${farm.id}`}
-                  className="rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950"
-                >
-                  Open dashboard
-                </a>
-                <a
-                  href={`/call/${farm.id}`}
-                  className="rounded-full border border-slate-500 px-4 py-2 text-sm font-semibold text-white"
-                >
-                  Call from this device
-                </a>
-              </div>
+              <FarmActions farmId={farm.id} />
             </article>
           ))}
         </div>

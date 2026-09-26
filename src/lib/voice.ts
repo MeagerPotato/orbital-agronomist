@@ -14,6 +14,7 @@ export type CallStatus =
   | "listening"
   | "checking"
   | "speaking"
+  | "dropped"
   | "ended"
   | "error";
 
@@ -91,6 +92,7 @@ export class VoiceSession {
   private eventQueue: QueuedEvent[] = [];
   private eventTimer: ReturnType<typeof setTimeout> | null = null;
   private checking = false;
+  private reconnecting = false;
 
   constructor(callbacks: VoiceCallbacks) {
     this.callbacks = callbacks;
@@ -100,7 +102,8 @@ export class VoiceSession {
     bundle: CallBundle;
     createHandlers: (callId: string) => Record<string, ToolHandler>;
   }): Promise<void> {
-    if (this.socket || this.ended) return;
+    if (this.ended) return;
+    if (this.socket) return;
     this.bundle = input.bundle;
     this.callbacks.onStatus("connecting");
     this.audio.unlock();
@@ -126,7 +129,42 @@ export class VoiceSession {
       const message = error instanceof Error ? error.message : "Could not start the call";
       this.callbacks.onError(message);
       this.callbacks.onStatus("error");
-      await this.hangUp();
+      this.ended = true;
+      this.discardSocket();
+      await this.audio.close();
+      if (this.callId) {
+        try {
+          await fetch("/api/calls", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: this.callId }),
+            keepalive: true,
+          });
+        } catch (endError) {
+          console.error("[voice] failed to end call", endError);
+        }
+      }
+    }
+  }
+
+  async reconnect(): Promise<void> {
+    if (this.ended || !this.bundle || this.reconnecting) return;
+    this.reconnecting = true;
+    this.callbacks.onError("");
+    this.callbacks.onStatus("connecting");
+    const previous = this.socket;
+    this.socket = null;
+    previous?.close();
+    try {
+      await this.audio.resume();
+      const token = readEphemeralToken(await this.fetchToken());
+      await this.connect(token);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Could not reconnect";
+      this.callbacks.onError(message);
+      this.callbacks.onStatus("dropped");
+    } finally {
+      this.reconnecting = false;
     }
   }
 
@@ -181,7 +219,7 @@ export class VoiceSession {
     const response = await fetch("/api/session", { method: "POST" });
     const payload = (await response.json()) as { error?: string };
     if (!response.ok) {
-      throw new Error(payload.error || "Could not start a voice session");
+      throw new Error(payload.error || "Could not get a voice token. Try again.");
     }
     return payload;
   }
@@ -211,13 +249,15 @@ export class VoiceSession {
       };
       socket.onerror = () => {
         if (!opened) reject(new Error("Voice connection failed"));
-        else this.callbacks.onError("Voice connection failed");
+        else this.callbacks.onError("The voice connection failed.");
       };
       socket.onclose = () => {
-        if (!this.ended) {
-          this.callbacks.onError("Voice connection closed");
-          void this.hangUp();
-        }
+        if (this.socket !== socket) return;
+        if (this.ended || this.reconnecting) return;
+        this.socket = null;
+        this.configured = false;
+        this.callbacks.onError("The voice connection dropped.");
+        this.callbacks.onStatus("dropped");
       };
       socket.onmessage = (event) => {
         if (typeof event.data !== "string") {
@@ -289,10 +329,11 @@ export class VoiceSession {
       return;
     }
 
-    if (type === "session.updated" && !this.configured) {
+    if (type === "session.updated") {
       this.configured = true;
       this.flushEarlyAudio();
-      this.sendGreeting();
+      if (!this.greeted) this.sendGreeting();
+      else this.callbacks.onStatus("listening");
       return;
     }
 
@@ -658,6 +699,12 @@ export class VoiceSession {
         sources,
       });
     }
+  }
+
+  private discardSocket(): void {
+    const socket = this.socket;
+    this.socket = null;
+    socket?.close();
   }
 
   private send(message: unknown): void {

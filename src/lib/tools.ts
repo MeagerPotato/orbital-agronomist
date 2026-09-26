@@ -28,6 +28,7 @@ function flagged<T extends Record<string, unknown>>(bundle: CallBundle, payload:
 export function createToolHandlers(
   bundle: CallBundle,
   callId: string,
+  options: { demo?: boolean } = {},
 ): Record<string, ToolHandler> {
   const language: Lang = bundle.language;
 
@@ -104,18 +105,30 @@ export function createToolHandlers(
       if (!bundle.profile.languages.includes(clipLanguage as Lang)) {
         return { error: "Unsupported clip language" };
       }
-      const response = await fetch("/api/clip", {
+      const demo = options.demo === true;
+      const body = {
+        farmId: bundle.farmId,
+        callId,
+        topic,
+        language: clipLanguage,
+        demo,
+      };
+      let response = await fetch(demo ? "/api/clip?demo=1" : "/api/clip", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          farmId: bundle.farmId,
-          callId,
-          topic,
-          language: clipLanguage,
-        }),
+        body: JSON.stringify(body),
       });
       if (!response.ok) {
-        console.error("[tools] /api/clip failed", response.status);
+        console.error("[tools] /api/clip failed", response.status, "falling back to pregenerated");
+        response = await fetch("/api/clip?demo=1", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...body, demo: true }),
+        });
+      }
+      if (!response.ok) {
+        console.error("[tools] /api/clip pregenerated fallback failed", response.status);
+        return { status: "failed", fallback: "pregenerated" };
       }
       return { status: "sending" };
     },

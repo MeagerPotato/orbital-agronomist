@@ -30,7 +30,7 @@ export async function POST() {
   if (!upstream.ok) {
     console.error("[session] xAI client_secrets failed", upstream.status, text.slice(0, 300));
     return NextResponse.json(
-      { error: "Could not start a voice session" },
+      { error: "Could not get a voice token. Try again." },
       { status: 502 },
     );
   }
@@ -40,7 +40,7 @@ export async function POST() {
   } catch {
     console.error("[session] xAI client_secrets was not JSON");
     return NextResponse.json(
-      { error: "Could not start a voice session" },
+      { error: "Could not get a voice token. Try again." },
       { status: 502 },
     );
   }
