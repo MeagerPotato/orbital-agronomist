@@ -42,12 +42,12 @@ export function DashboardView({
   }, [farmId]);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5">
+    <main className="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
+      <div className="mx-auto flex min-w-0 max-w-7xl flex-col gap-4 px-4 py-5">
         <header className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs tracking-[0.25em] text-amber-300 uppercase">Orbital Agronomist</p>
-            <h1 className="text-3xl font-semibold text-white">{farm.profile.farmerName}</h1>
+            <h1 className="text-2xl font-semibold text-white sm:text-3xl">{farm.profile.farmerName}</h1>
             <p className="text-lg text-slate-400">{farm.profile.farmerNameEn}</p>
             <p className="text-slate-200">
               {farm.profile.region} · {farm.profile.village}
@@ -90,7 +90,7 @@ export function DashboardView({
 
         <OrbitPanel farmId={farmId} polygon={farm.polygon} />
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid min-w-0 gap-4 lg:grid-cols-2">
           <Panel title="Drought footprint">
             <div className="h-80 overflow-hidden rounded-xl">
               <FieldMapView polygon={farm.polygon} footprint={footprint} />

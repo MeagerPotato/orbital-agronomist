@@ -68,7 +68,7 @@ export function IncomingClipCard({ clip }: { clip: IncomingClip }) {
         <button type="button" className="relative block w-full" onClick={() => void playTogether()}>
           <video
             ref={videoRef}
-            className="max-h-80 w-full bg-black object-contain"
+            className="max-h-48 w-full bg-black object-contain sm:max-h-80"
             src={videoUrl}
             muted
             playsInline

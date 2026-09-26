@@ -5,7 +5,7 @@
  *   npx tsx scripts/generate-clips.ts --farm cn-rice-2022
  */
 import path from "node:path";
-import { createServerClient } from "../src/lib/supabase";
+import { createServerClient } from "../src/lib/supabase-server";
 import type { Lang } from "../src/lib/types";
 import {
   isRecord,

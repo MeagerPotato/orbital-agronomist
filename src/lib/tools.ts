@@ -1,5 +1,4 @@
 import { formatSpokenDate } from "./farms";
-import { FIXTURE_FLAG } from "./fixtures";
 import type { CallBundle } from "./farm-data";
 import type { FarmDerived, Lang } from "./types";
 
@@ -20,11 +19,6 @@ export function weatherTrend(derived: FarmDerived, baselineYear: number): string
   return `Rain over the last 30 days is ${derived.rain30dMm} mm, versus ${derived.rain30dMmBaseline} mm in ${baselineYear}. Rain over the season window is ${derived.rainWindowMm} mm, versus ${derived.rainWindowMmBaseline} mm in ${baselineYear}. Days reaching 35°C in the last 30 days: ${derived.heatDays35C_30d}. Root-zone wetness is ${derived.rootZoneWetnessNow} now, versus ${derived.rootZoneWetnessBaseline} in ${baselineYear}.`;
 }
 
-function flagged<T extends Record<string, unknown>>(bundle: CallBundle, payload: T) {
-  if (!bundle.fixture) return payload;
-  return { fixture: FIXTURE_FLAG, ...payload };
-}
-
 export function createToolHandlers(
   bundle: CallBundle,
   callId: string,
@@ -35,7 +29,7 @@ export function createToolHandlers(
   return {
     async get_farmer_profile() {
       const profile = bundle.profile;
-      return flagged(bundle, {
+      return {
         farmerName: profile.farmerName,
         farmerNameEn: profile.farmerNameEn,
         fictional: true,
@@ -47,22 +41,22 @@ export function createToolHandlers(
         simulatedToday: formatSpokenDate(bundle.simulatedToday, language),
         baselineYear: bundle.baselineYear,
         language,
-      });
+      };
     },
 
     async get_field_health() {
       const derived = bundle.derived;
-      return flagged(bundle, {
+      return {
         lastObsDate: formatSpokenDate(bundle.lastObsDate, language),
         pctChange30d: Math.round(derived.pctChange30d),
         pctChangeVsBaseline: Math.round(derived.pctChangeVsBaseline),
         trend: fieldTrend(derived, bundle.baselineYear),
-      });
+      };
     },
 
     async get_weather_summary() {
       const derived = bundle.derived;
-      return flagged(bundle, {
+      return {
         rain30dMm: derived.rain30dMm,
         rain30dMmBaseline: derived.rain30dMmBaseline,
         rainWindowMm: derived.rainWindowMm,
@@ -72,7 +66,7 @@ export function createToolHandlers(
         rootZoneWetnessBaseline: derived.rootZoneWetnessBaseline,
         baselineYear: bundle.baselineYear,
         summary: weatherTrend(derived, bundle.baselineYear),
-      });
+      };
     },
 
     async get_diagnosis() {
@@ -81,7 +75,7 @@ export function createToolHandlers(
       if (!summary) {
         return { error: `No diagnosis in ${language}` };
       }
-      return flagged(bundle, {
+      return {
         status: diagnosis.status,
         severity: diagnosis.severity,
         evidence: diagnosis.evidence
@@ -93,7 +87,7 @@ export function createToolHandlers(
           text: action.text[language],
         })),
         caveats: diagnosis.caveats[language],
-      });
+      };
     },
 
     async send_guidance_clip(args) {

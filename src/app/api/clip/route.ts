@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { clipObjectPaths } from "@/lib/clips";
 import { getFarmConfig } from "@/lib/farms";
-import { createServerClient } from "@/lib/supabase";
+import { rejectIfCallExpired, rejectIfCrossOrigin } from "@/lib/request-guard";
+import { createServerClient } from "@/lib/supabase-server";
 import type { Lang } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -14,6 +15,8 @@ const UUID =
  * Demo mode: attach a pregenerated clip to this call and notify via Realtime.
  */
 export async function POST(request: Request) {
+  const forbidden = rejectIfCrossOrigin(request);
+  if (forbidden) return forbidden;
   const body = (await request.json().catch(() => null)) as {
     farmId?: string;
     callId?: string;
@@ -36,6 +39,8 @@ export async function POST(request: Request) {
   if (!UUID.test(callId)) {
     return NextResponse.json({ error: "Invalid call id" }, { status: 400 });
   }
+  const expired = await rejectIfCallExpired(callId);
+  if (expired) return expired;
 
   const paths = clipObjectPaths(farmId, topic, language);
   const forceDemo =

@@ -10,7 +10,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { createServerClient } from "../src/lib/supabase";
+import { createServerClient } from "../src/lib/supabase-server";
 import type {
   Diagnosis,
   Farm,

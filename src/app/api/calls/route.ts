@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getFixture } from "@/lib/fixtures";
 import { getFarmConfig } from "@/lib/farms";
-import { createServerClient } from "@/lib/supabase";
+import { rejectIfCallExpired, rejectIfCrossOrigin } from "@/lib/request-guard";
+import { createServerClient } from "@/lib/supabase-server";
 import type { Lang } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -11,6 +11,8 @@ const UUID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(request: Request) {
+  const forbidden = rejectIfCrossOrigin(request);
+  if (forbidden) return forbidden;
   const body = (await request.json().catch(() => null)) as {
     farmId?: string;
     language?: Lang;
@@ -19,7 +21,7 @@ export async function POST(request: Request) {
   const farmId = body?.farmId ?? "";
   const language = body?.language;
   const config = getFarmConfig(farmId);
-  if (!config || !getFixture(farmId)) {
+  if (!config) {
     return NextResponse.json({ error: "Unknown farm" }, { status: 404 });
   }
   if (body?.alert === true) {
@@ -49,6 +51,8 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  const forbidden = rejectIfCrossOrigin(request);
+  if (forbidden) return forbidden;
   const body = (await request.json().catch(() => null)) as {
     id?: string;
     language?: Lang;
@@ -58,6 +62,8 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Invalid call id" }, { status: 400 });
   }
   if (body?.language === "zh" || body?.language === "en") {
+    const expired = await rejectIfCallExpired(id);
+    if (expired) return expired;
     try {
       const supabase = createServerClient();
       const { error } = await supabase.from("calls").update({ language: body.language }).eq("id", id);
@@ -121,42 +127,7 @@ async function createAlertCall(farmId: string, language: Lang) {
 
 async function ensureFarmRow(farmId: string): Promise<void> {
   const supabase = createServerClient();
-  const existing = await supabase
-    .from("farms")
-    .select("id, derived")
-    .eq("id", farmId)
-    .maybeSingle();
+  const existing = await supabase.from("farms").select("id").eq("id", farmId).maybeSingle();
   if (existing.error) throw new Error(existing.error.message);
-  if (existing.data) return;
-
-  const fixture = getFixture(farmId);
-  const config = getFarmConfig(farmId);
-  if (!fixture || !config) throw new Error("Unknown farm");
-
-  const { error } = await supabase.from("farms").insert({
-    id: farmId,
-    profile: {
-      ...fixture.profile,
-      farmerName: config.profile.farmerName,
-      farmerNameEn: config.profile.farmerNameEn,
-      region: config.profile.region,
-      country: config.profile.country,
-      crop: config.profile.crop,
-      languages: config.profile.languages,
-      event: config.profile.event,
-      fictional: true,
-      ...(fixture.placeholder ? { fixture: "FAKE" } : {}),
-    },
-    polygon: fixture.polygon,
-    simulated_today: fixture.simulatedToday,
-    baseline_year: config.baselineYear,
-    derived: fixture.placeholder
-      ? { ...fixture.derived, fixture: "FAKE" }
-      : fixture.derived,
-    sources: fixture.sources,
-  });
-  if (!error) return;
-
-  const again = await supabase.from("farms").select("id").eq("id", farmId).maybeSingle();
-  if (!again.data) throw new Error(error.message);
+  if (!existing.data) throw new Error("Farm is not in the database");
 }

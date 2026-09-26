@@ -1,4 +1,3 @@
-import { FIXTURE_FLAG, getFixture } from "./fixtures";
 import {
   cropFor,
   getFarmConfig,
@@ -25,15 +24,13 @@ export type CallBundle = {
   baselineYear: number;
   lastObsDate: string;
   clipTopics: string[];
-  /** Set when numbers are the local placeholder series. */
-  fixture: typeof FIXTURE_FLAG | null;
   eventName: string;
 };
 
 function isRealDerived(value: unknown): value is FarmDerived {
   if (!value || typeof value !== "object") return false;
   const row = value as FarmDerived & { fixture?: string };
-  return typeof row.ndviNow === "number" && row.fixture !== FIXTURE_FLAG;
+  return typeof row.ndviNow === "number" && row.fixture !== "FAKE";
 }
 
 export async function loadCallBundle(
@@ -41,96 +38,81 @@ export async function loadCallBundle(
   language?: Lang,
 ): Promise<CallBundle | null> {
   const config = getFarmConfig(farmId);
-  const fixture = getFixture(farmId);
-  if (!config || !fixture) return null;
+  const supabase = getBrowserSupabase();
+  if (!config || !supabase) return null;
 
   const selected =
     language && config.profile.languages.includes(language)
       ? language
       : config.profile.primaryLanguage;
-  let derived = fixture.derived;
-  let diagnosis = fixture.diagnosis;
-  let simulatedToday = fixture.simulatedToday;
-  let baselineYear = config.baselineYear;
-  let lastObsDate = fixture.lastObsDate;
-  let profile: FarmProfile = {
-    ...fixture.profile,
-    farmerName: config.profile.farmerName,
-    farmerNameEn: config.profile.farmerNameEn,
-    region: config.profile.region,
-    country: config.profile.country,
-    crop: config.profile.crop,
-    languages: config.profile.languages,
-    event: config.profile.event,
-    village: config.profile.village ?? fixture.profile.village,
-  };
-  let usingFixture = fixture.placeholder;
 
   try {
-    const supabase = getBrowserSupabase();
-    if (supabase) {
-      const { data: farmRow } = await supabase
-        .from("farms")
-        .select("profile, simulated_today, baseline_year, derived")
-        .eq("id", farmId)
-        .maybeSingle();
-      const { data: diagnosisRow } = await supabase
-        .from("diagnoses")
-        .select("content")
-        .eq("farm_id", farmId)
-        .maybeSingle();
-      const content = diagnosisRow?.content as Diagnosis | undefined;
-      if (farmRow && isRealDerived(farmRow.derived) && content?.summary) {
-        usingFixture = false;
-        derived = farmRow.derived as FarmDerived;
-        diagnosis = content;
-        simulatedToday = String(farmRow.simulated_today).slice(0, 10);
-        baselineYear = farmRow.baseline_year as number;
-        lastObsDate = simulatedToday;
-        const remoteProfile = farmRow.profile as Partial<FarmProfile> | null;
-        if (remoteProfile?.farmerName) {
-          profile = {
-            ...profile,
-            ...remoteProfile,
-            fictional: true,
-            languages: config.profile.languages,
-          };
-        }
-      }
+    const { data: farmRow, error: farmError } = await supabase
+      .from("farms")
+      .select("profile, simulated_today, baseline_year, derived")
+      .eq("id", farmId)
+      .maybeSingle();
+    if (farmError) throw new Error(farmError.message);
+    const { data: diagnosisRow, error: diagnosisError } = await supabase
+      .from("diagnoses")
+      .select("content")
+      .eq("farm_id", farmId)
+      .maybeSingle();
+    if (diagnosisError) throw new Error(diagnosisError.message);
+
+    const content = diagnosisRow?.content as Diagnosis | undefined;
+    if (!farmRow || !isRealDerived(farmRow.derived) || !content?.summary) return null;
+
+    const simulatedToday = String(farmRow.simulated_today).slice(0, 10);
+    const remoteProfile = (farmRow.profile ?? {}) as Partial<FarmProfile>;
+    const profile: FarmProfile = {
+      village: remoteProfile.village || config.profile.region,
+      region: config.profile.region,
+      country: config.profile.country,
+      lat: remoteProfile.lat ?? 0,
+      lon: remoteProfile.lon ?? 0,
+      crop: config.profile.crop,
+      event: config.profile.event,
+      ...remoteProfile,
+      id: farmId,
+      farmerName: config.profile.farmerName,
+      farmerNameEn: config.profile.farmerNameEn,
+      fictional: true,
+      languages: config.profile.languages,
+    };
+
+    const cropNames: Partial<Record<Lang, string>> = {};
+    for (const option of config.profile.languages) {
+      cropNames[option] = cropFor(config, option);
     }
-  } catch (error) {
-    console.error("[farm-data] using fixture", error);
-  }
+    profile.crop = cropNames[selected] || profile.crop;
+    const village = profile.village || profile.region;
 
-  const cropNames: Partial<Record<Lang, string>> = {};
-  for (const option of config.profile.languages) {
-    cropNames[option] = cropFor(config, option);
-  }
-  profile = { ...profile, crop: cropNames[selected] || profile.crop };
-
-  const village = profile.village || profile.region;
-  return {
-    farmId,
-    language: selected,
-    voice: voiceFor(selected),
-    greeting: greetingFor(config, selected, simulatedToday),
-    instructions: instructionsFor({
-      farm: config,
+    return {
+      farmId,
       language: selected,
-      village,
+      voice: voiceFor(selected),
+      greeting: greetingFor(config, selected, simulatedToday),
+      instructions: instructionsFor({
+        farm: config,
+        language: selected,
+        village,
+        simulatedToday,
+        fixture: false,
+      }),
+      tools: toolsFor(config),
+      profile,
+      cropNames,
+      derived: farmRow.derived as FarmDerived,
+      diagnosis: content,
       simulatedToday,
-      fixture: usingFixture,
-    }),
-    tools: toolsFor(config),
-    profile,
-    cropNames,
-    derived,
-    diagnosis,
-    simulatedToday,
-    baselineYear,
-    lastObsDate,
-    clipTopics: config.clipTopics,
-    fixture: usingFixture ? FIXTURE_FLAG : null,
-    eventName: config.profile.event.name,
-  };
+      baselineYear: farmRow.baseline_year as number,
+      lastObsDate: simulatedToday,
+      clipTopics: config.clipTopics,
+      eventName: config.profile.event.name,
+    };
+  } catch (error) {
+    console.error("[farm-data] could not load farm", error instanceof Error ? error.message : error);
+    return null;
+  }
 }

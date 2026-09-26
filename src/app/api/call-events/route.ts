@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase";
+import { rejectIfCallExpired, rejectIfCrossOrigin } from "@/lib/request-guard";
+import { createServerClient } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,6 +18,8 @@ const UUID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(request: Request) {
+  const forbidden = rejectIfCrossOrigin(request);
+  if (forbidden) return forbidden;
   const body = (await request.json().catch(() => null)) as {
     callId?: string;
     events?: Array<{ type?: string; payload?: unknown }>;
@@ -26,6 +29,8 @@ export async function POST(request: Request) {
   if (!UUID.test(callId)) {
     return NextResponse.json({ error: "Invalid call id" }, { status: 400 });
   }
+  const expired = await rejectIfCallExpired(callId);
+  if (expired) return expired;
   if (!Array.isArray(events) || events.length === 0) {
     return NextResponse.json({ ok: true, inserted: 0 });
   }

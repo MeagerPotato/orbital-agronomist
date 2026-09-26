@@ -8,7 +8,7 @@
  */
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { createServerClient } from "../src/lib/supabase";
+import { createServerClient } from "../src/lib/supabase-server";
 import type { GeoPolygon } from "../src/lib/types";
 import { addDays, farmDir, isRecord, loadEnv, readPolygon, selectedFarms } from "./pipeline";
 

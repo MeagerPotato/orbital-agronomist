@@ -93,6 +93,7 @@ export class VoiceSession {
   private eventTimer: ReturnType<typeof setTimeout> | null = null;
   private checking = false;
   private reconnecting = false;
+  private sessionCap: ReturnType<typeof setTimeout> | null = null;
 
   constructor(callbacks: VoiceCallbacks) {
     this.callbacks = callbacks;
@@ -108,6 +109,7 @@ export class VoiceSession {
     if (this.socket) return;
     this.bundle = input.bundle;
     this.callbacks.onStatus("connecting");
+    this.armSessionCap();
     this.audio.unlock();
     const micPromise = this.audio.beginCapture((chunk) => this.onMicChunk(chunk));
     micPromise.then(
@@ -132,6 +134,7 @@ export class VoiceSession {
       this.callbacks.onError(message);
       this.callbacks.onStatus("error");
       this.ended = true;
+      this.clearSessionCap();
       this.discardSocket();
       await this.audio.close();
       if (this.callId) {
@@ -194,6 +197,7 @@ export class VoiceSession {
   }
 
   async hangUp(): Promise<void> {
+    this.clearSessionCap();
     if (this.ended) return;
     this.ended = true;
     if (this.flushTimer) clearTimeout(this.flushTimer);
@@ -215,6 +219,18 @@ export class VoiceSession {
       }
     }
     this.callbacks.onStatus("ended");
+  }
+
+  private armSessionCap(): void {
+    this.clearSessionCap();
+    this.sessionCap = setTimeout(() => {
+      void this.hangUp();
+    }, 5 * 60 * 1000);
+  }
+
+  private clearSessionCap(): void {
+    if (this.sessionCap) clearTimeout(this.sessionCap);
+    this.sessionCap = null;
   }
 
   private async fetchToken(): Promise<unknown> {

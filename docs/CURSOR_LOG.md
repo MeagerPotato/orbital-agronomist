@@ -25,3 +25,4 @@ Submission evidence. One line per task: timestamp, what was built, which Cursor 
 - 2026-09-26 16:49 EDT — Proactive drought alert: dashboard button rings the open call page, and Accept opens the voice session with the alert. Cursor feature: Agent (browser).
 - 2026-09-26 16:50 EDT — Redesigned the live-call panel: idle/live/ended, agent-step timeline, citation and video cards, labeled transcript. Cursor feature: Agent (browser).
 - 2026-09-26 16:50 EDT — Regional drought footprint: 42 cells of Sentinel-2 NDVI change around the field, drawn on the dashboard map. Cursor feature: Agent (browser).
+- 2026-09-26 17:50 EDT — Pre-submission audit: origin guards, 5-minute session cap, secret client split, call/dashboard overflow, RLS write probe. Cursor feature: Agent.

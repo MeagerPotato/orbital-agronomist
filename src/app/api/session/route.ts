@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { rejectIfCrossOrigin, SESSION_SECONDS } from "@/lib/request-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -7,7 +8,9 @@ export const dynamic = "force-dynamic";
  * Mints a short-lived xAI realtime token. The browser never sees XAI_API_KEY.
  * https://docs.x.ai/developers/model-capabilities/audio/ephemeral-tokens
  */
-export async function POST() {
+export async function POST(request: Request) {
+  const forbidden = rejectIfCrossOrigin(request);
+  if (forbidden) return forbidden;
   const apiKey = process.env.XAI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
@@ -22,7 +25,7 @@ export async function POST() {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ expires_after: { seconds: 300 } }),
+    body: JSON.stringify({ expires_after: { seconds: SESSION_SECONDS } }),
     cache: "no-store",
   });
 

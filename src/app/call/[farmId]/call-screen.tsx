@@ -189,7 +189,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
   const ringing = Boolean(ring.alert) && !inCall;
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-4 py-6">
+    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-3 overflow-x-hidden px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
       <header className="space-y-1">
         <p className="text-xs tracking-widest text-neutral-500 uppercase">Orbital Agronomist</p>
         <h1 className="text-2xl font-semibold">{bundle.profile.farmerName}</h1>
@@ -218,17 +218,10 @@ export function CallScreen({ farmId }: { farmId: string }) {
         </div>
       ) : null}
 
-      {bundle.fixture === "FAKE" ? (
-        <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm">
-          Placeholder field numbers (FAKE) until the real Sentinel-2 and NASA POWER series are
-          loaded. {bundle.profile.farmerName} is fictional. Guidance is general.
-        </p>
-      ) : (
-        <p className="text-sm text-neutral-600 dark:text-neutral-300">
-          Replay of real {bundle.eventName} satellite and weather data. The farmer is fictional.
-          Guidance is general; confirm with your local agricultural extension officer.
-        </p>
-      )}
+      <p className="text-sm text-neutral-600 dark:text-neutral-300">
+        Replay of real {bundle.eventName} satellite and weather data. The farmer is fictional.
+        Guidance is general; confirm with your local agricultural extension officer.
+      </p>
 
       {ringing ? (
         <IncomingAlert
@@ -272,7 +265,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
 
       <div
         data-testid="transcript"
-        className="flex flex-1 flex-col gap-2 overflow-y-auto rounded-md border p-3"
+        className="flex min-h-0 max-h-[36vh] flex-1 flex-col gap-2 overflow-y-auto rounded-md border p-3"
         aria-live="polite"
       >
         {lines.length === 0 ? (
