@@ -468,3 +468,16 @@ Farm B setting: "semi-arid eastern Kenya, red soil, small maize plots, acacia tr
 6. 2:15–2:45 Impact, what's next (real phone lines, more languages, proactive alerts), built with Cursor.
 
 **Expo (≈3 min):** 20 s pitch → Mandarin call live → clip lands → hand a judge the QR code to call Farm B themselves → 30 s on data and Grok stack → 20 s on the Cursor workflow (show CURSOR_LOG) → questions. Backup: recorded video on the laptop.
+
+---
+
+## 10. STATUS AND REVISED SCHEDULE (updated Sat 1:00 PM ET, overrides earlier timings)
+
+- Phase 0: DONE.
+- Phase 2a: DONE. Migration applied to Supabase (project `gpuzmgxplywdbastvjtm`), public `clips` Storage bucket created. SQL is in `supabase/migrations/0001_init.sql` for reference. **Do not re-run it.** Phase 2 now means only 2b (`src/lib/supabase.ts`) and 2c (`seed-supabase.ts`). Note: `clips.call_id` is a nullable FK to `calls(id)`.
+- We are ~4 hours behind. Work runs in **two parallel Cursor Agent tabs**:
+  - **Tab A (data track):** Phase 2b/2c → Phase 1 (once both `field.geojson` files exist) → Phase 3 → seed → Phase 5a clip generation.
+  - **Tab B (voice track):** Phase 4. Until Supabase is seeded, tool handlers read from a local fixture `src/lib/fixtures.ts` shaped like the Farm and Diagnosis types (placeholder numbers clearly marked FAKE). Swap to Supabase once seeded. Tab B must not edit `scripts/`, `data/`, or `package.json`.
+- **Cuts now in effect:** live-mode clip generation, NDVI imagery PNGs, Farm A English toggle. Keep: both farms, Farm B in English, Supabase + Realtime dashboard, QR code if time.
+- **New kill rule:** if voice is not talking by 3:30 PM ET, fall back to text chat + `/v1/tts`.
+- Targets: data + diagnosis 2:30 PM · voice 3:30 PM · clips 4:30 PM · UI 6:00 PM · deployed 6:45 PM · video recorded 8:00 PM · Devpost submitted 9:30 PM.
