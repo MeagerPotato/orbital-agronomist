@@ -1,39 +1,67 @@
-import { FarmActions } from "./farm-actions";
 import { listFarms } from "@/lib/farms";
 
+const HERO = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/clips/brand/hero.png`;
+
+const STEPS = [
+  "Sentinel-2 sees the field",
+  "Grok diagnoses and calls in the farmer's language",
+  "Grok Imagine sends a how-to video",
+];
+
+const BUILT_WITH = [
+  "Cursor",
+  "Grok Voice",
+  "Grok Imagine",
+  "grok-4.7",
+  "Sentinel-2",
+  "NASA POWER",
+  "Supabase",
+];
+
 export default function Home() {
-  const farms = listFarms();
+  const farm = listFarms()[0];
+  const farmId = farm?.id ?? "cn-rice-2022";
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
-      <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center gap-8 px-6 py-16">
-        <header>
-          <p className="text-xs tracking-[0.25em] text-amber-300 uppercase">Orbital Agronomist</p>
-          <h1 className="mt-2 text-4xl font-semibold text-white">A field, seen from orbit</h1>
-          <p className="mt-3 max-w-xl text-lg text-slate-300">
-            Real Sentinel-2 and NASA weather for one fictional farmer. Call the hotline, or open the
-            judge dashboard.
+      <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6 sm:py-12">
+        <img
+          src={HERO}
+          alt="A satellite above terraced rice paddies at dawn, a beam of light reaching a farmer with a phone"
+          className="aspect-video w-full rounded-2xl border border-slate-700 object-cover"
+        />
+        <header className="max-w-3xl">
+          <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Orbital Agronomist</h1>
+          <p className="mt-3 text-xl text-slate-200 sm:text-2xl">
+            Satellites can see a farm failing. Now they can call the farmer.
           </p>
         </header>
-        <div className="grid gap-4">
-          {farms.map((farm) => (
-            <article
-              key={farm.id}
-              className="rounded-2xl border border-slate-700 bg-slate-900 p-6"
-            >
-              <p className="text-sm text-amber-200">{farm.profile.event.name}</p>
-              <h2 className="mt-1 text-2xl font-semibold text-white">{farm.profile.farmerName}</h2>
-              <p className="text-lg text-slate-400">{farm.profile.farmerNameEn}</p>
-              <p className="mt-2 text-slate-300">
-                {farm.profile.crop} · {farm.profile.region}, {farm.profile.country}
-              </p>
-              <p className="mt-1 text-sm tracking-wide text-slate-400 uppercase">
-                {farm.profile.languages.map((language) => (language === "zh" ? "中文" : "English")).join(" · ")}
-              </p>
-              <FarmActions farmId={farm.id} />
-            </article>
+        <ol className="grid gap-3 sm:grid-cols-3">
+          {STEPS.map((step, index) => (
+            <li key={step} className="rounded-2xl border border-slate-700 bg-slate-900/80 p-4">
+              <p className="text-xs tracking-wide text-amber-300 uppercase">{index + 1}</p>
+              <p className="mt-2 text-base text-slate-100">{step}</p>
+            </li>
           ))}
+        </ol>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <a
+            href={`/dashboard/${farmId}`}
+            className="rounded-full bg-amber-400 px-5 py-3 text-center text-base font-semibold text-slate-950"
+          >
+            Open live dashboard
+          </a>
+          <a
+            href={`/call/${farmId}`}
+            className="rounded-full border border-slate-500 px-5 py-3 text-center text-base font-semibold text-white"
+          >
+            Call the field
+          </a>
         </div>
+        <p className="max-w-3xl text-sm text-slate-400">
+          Replay of the real August 2022 Yangtze drought. The farmer is fictional; the data is real.
+        </p>
+        <p className="text-sm text-slate-500">Built with {BUILT_WITH.join(" · ")}</p>
       </div>
     </main>
   );

@@ -26,3 +26,4 @@ Submission evidence. One line per task: timestamp, what was built, which Cursor 
 - 2026-09-26 16:50 EDT — Redesigned the live-call panel: idle/live/ended, agent-step timeline, citation and video cards, labeled transcript. Cursor feature: Agent (browser).
 - 2026-09-26 16:50 EDT — Regional drought footprint: 42 cells of Sentinel-2 NDVI change around the field, drawn on the dashboard map. Cursor feature: Agent (browser).
 - 2026-09-26 18:40 EDT — Push-to-talk on the call page (`?ptt=1`): hold-to-talk / spacebar, `turn_detection: null`, slightly higher server_vad threshold. Cursor feature: Agent (browser).
+- 2026-09-26 18:41 EDT — Landing page hero: four Grok Imagine stills, a silent 6-second intro from the best one, and the dark home page. Cursor feature: Agent (browser).
