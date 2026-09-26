@@ -62,17 +62,18 @@ export function useFreshVideo(input: {
       while (!stop.current && Date.now() - started < LIMIT_MS) {
         await new Promise((resolve) => window.setTimeout(resolve, POLL_MS));
         if (stop.current || Date.now() - started >= LIMIT_MS) break;
-        const poll = await fetch(`/api/clip/${payload.id}`);
-        const body = (await poll.json()) as {
+        const poll = await fetch(`/api/clip/${payload.id}`, { method: "POST" });
+        const body = (await poll.json().catch(() => null)) as {
           status?: string;
           video_path?: string;
-        };
+        } | null;
+        if (!poll.ok || !body) continue;
         if (body.status === "ready" && body.video_path) {
           setLivePath(body.video_path);
           setPhase("ready");
           return;
         }
-        if (body.status === "saved" || !poll.ok) {
+        if (body.status === "saved") {
           setPhase("saved");
           return;
         }

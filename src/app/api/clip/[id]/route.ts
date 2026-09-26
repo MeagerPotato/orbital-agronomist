@@ -27,6 +27,21 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> },
 ) {
+  return checkClip(request, context);
+}
+
+/** POST so the browser sends Origin. A same-origin GET does not, and the origin guard would reject it. */
+export async function POST(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  return checkClip(request, context);
+}
+
+async function checkClip(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
   const forbidden = rejectIfCrossOrigin(request);
   if (forbidden) return forbidden;
   const { id } = await context.params;
