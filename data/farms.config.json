@@ -1,0 +1,72 @@
+{
+  "farms": [
+    {
+      "id": "cn-rice-2022",
+      "polygonPath": "data/farms/cn-rice-2022/field.geojson",
+      "analysisWindow": {
+        "start": "2022-06-01",
+        "end": "2022-09-30"
+      },
+      "baselineYear": 2021,
+      "baselineWindow": {
+        "start": "2021-06-01",
+        "end": "2021-09-30"
+      },
+      "simulatedTodayRule": "Last cloud-free observation in mid/late August 2022",
+      "profile": {
+        "farmerName": "张师傅",
+        "farmerNameEn": "Master Zhang",
+        "fictional": true,
+        "where": "Rice cluster in Sichuan / Chongqing / Jiangxi",
+        "region": "Sichuan / Chongqing / Jiangxi",
+        "country": "China",
+        "crop": "Mid-season rice",
+        "languages": ["zh", "en"],
+        "primaryLanguage": "zh",
+        "event": {
+          "name": "2022 Yangtze basin drought + heatwave",
+          "summary": "Replay of the 2022 Yangtze basin drought and heatwave during the mid-season rice window. Satellite and weather data are real; the farmer is fictional."
+        }
+      },
+      "clipTopics": [
+        "irrigation_timing",
+        "prioritize_flowering_fields",
+        "heat_stress_foliar_spray"
+      ]
+    },
+    {
+      "id": "ke-maize-2022",
+      "polygonPath": "data/farms/ke-maize-2022/field.geojson",
+      "analysisWindow": {
+        "start": "2022-02-01",
+        "end": "2022-06-30"
+      },
+      "baselineYear": 2020,
+      "baselineWindow": {
+        "start": "2020-02-01",
+        "end": "2020-06-30"
+      },
+      "simulatedTodayRule": "Last cloud-free observation in late April or May 2022",
+      "profile": {
+        "farmerName": "Mary Mutua",
+        "farmerNameEn": "Mary Mutua",
+        "fictional": true,
+        "where": "Smallholder maize plots in Machakos / Makueni / Kitui, eastern Kenya",
+        "region": "Machakos / Makueni / Kitui",
+        "country": "Kenya",
+        "crop": "Maize (with beans)",
+        "languages": ["en"],
+        "primaryLanguage": "en",
+        "event": {
+          "name": "2022 Horn of Africa drought",
+          "summary": "Replay of the 2022 Horn of Africa drought after the failed March–May long rains. Satellite and weather data are real; the farmer is fictional."
+        }
+      },
+      "clipTopics": [
+        "mulching_soil_moisture",
+        "zai_pits_water_harvesting",
+        "drought_tolerant_varieties"
+      ]
+    }
+  ]
+}
