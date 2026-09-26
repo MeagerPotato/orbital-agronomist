@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { isPlayableClip } from "@/lib/clips";
 import { getBrowserSupabase } from "@/lib/supabase";
 import type { IncomingClip } from "./incoming-clip";
 
@@ -18,12 +19,14 @@ export function useIncomingClip(callId: string) {
     async function loadLatest() {
       const { data } = await client
         .from("clips")
-        .select("id, topic, language, video_path, audio_path")
+        .select("id, topic, language, video_path, audio_path, status")
         .eq("call_id", callId)
         .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (!cancelled && data) setClip(data as IncomingClip);
+        .limit(8);
+      const playable = ((data ?? []) as Array<IncomingClip & { status?: string | null }>).find((row) =>
+        isPlayableClip(row),
+      );
+      if (!cancelled && playable) setClip(playable);
     }
 
     void loadLatest();
@@ -32,14 +35,13 @@ export function useIncomingClip(callId: string) {
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*",
           schema: "public",
           table: "clips",
           filter: `call_id=eq.${callId}`,
         },
-        (payload) => {
-          const row = payload.new as IncomingClip;
-          if (row?.id) setClip(row);
+        () => {
+          void loadLatest();
         },
       )
       .subscribe();

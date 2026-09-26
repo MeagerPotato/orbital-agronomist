@@ -370,7 +370,7 @@ export function CallScreen({ farmId }: { farmId: string }) {
         )}
       </div>
 
-      {incomingClip ? <IncomingClipCard clip={incomingClip} /> : null}
+      {incomingClip ? <IncomingClipCard clip={incomingClip} farmId={farmId} callId={callId} /> : null}
 
       {status === "dropped" ? (
         <button

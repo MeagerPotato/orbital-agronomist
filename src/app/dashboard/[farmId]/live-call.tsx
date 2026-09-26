@@ -2,7 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import knowledge from "../../../../data/knowledge/sources.json";
-import { clipPublicUrl } from "@/lib/clips";
+import { clipObjectPaths, clipPublicUrl, isPlayableClip } from "@/lib/clips";
+import { FreshVideoControls } from "@/app/call/[farmId]/incoming-clip";
+import { useFreshVideo } from "@/lib/use-fresh-video";
 import { getBrowserSupabase } from "@/lib/supabase";
 
 const WINDOW_MS = 10 * 60 * 1000;
@@ -35,9 +37,11 @@ type EventRow = {
 
 type ClipRow = {
   id: string;
+  call_id?: string | null;
   topic: string | null;
   language: string | null;
   video_path: string | null;
+  audio_path?: string | null;
   status: string | null;
 };
 
@@ -113,7 +117,7 @@ export function LiveCallPanel({ farmId }: { farmId: string }) {
           .order("id"),
         client
           .from("clips")
-          .select("id, topic, language, video_path, status")
+          .select("id, call_id, topic, language, video_path, audio_path, status")
           .eq("call_id", latest.id)
           .order("created_at"),
       ]);
@@ -168,7 +172,8 @@ export function LiveCallPanel({ farmId }: { farmId: string }) {
   );
 
   const citations = useMemo(() => citationsFrom(events), [events]);
-  const sentClip = clips.at(-1) ?? clipFromEvents(events);
+  const sentClip =
+    [...clips].reverse().find((row) => isPlayableClip(row) && row.topic) ?? clipFromEvents(events);
 
   useEffect(() => {
     const node = transcriptRef.current;
@@ -231,7 +236,14 @@ export function LiveCallPanel({ farmId }: { farmId: string }) {
           ) : null}
 
           {sentClip?.topic ? (
-            <VideoCard topic={sentClip.topic} videoPath={sentClip.video_path} />
+            <VideoCard
+              farmId={farmId}
+              callId={sentClip.call_id || visibleCall.id}
+              topic={sentClip.topic}
+              language={sentClip.language || visibleCall.language || "en"}
+              videoPath={sentClip.video_path}
+              audioPath={sentClip.audio_path ?? null}
+            />
           ) : null}
 
           <div
@@ -312,12 +324,36 @@ function LangBadge({ language }: { language: string | null | undefined }) {
   );
 }
 
-function VideoCard({ topic, videoPath }: { topic: string; videoPath: string | null }) {
-  const url = videoPath ? clipPublicUrl(videoPath) : "";
+function VideoCard({
+  farmId,
+  callId,
+  topic,
+  language,
+  videoPath,
+  audioPath,
+}: {
+  farmId: string;
+  callId: string;
+  topic: string;
+  language: string;
+  videoPath: string | null;
+  audioPath: string | null;
+}) {
+  const stored = clipObjectPaths(farmId, topic, language);
+  const fresh = useFreshVideo({
+    farmId,
+    callId,
+    topic,
+    language,
+    videoPath: videoPath && !videoPath.startsWith("pending:") ? videoPath : stored.video_path,
+  });
+  const url = fresh.videoPath ? clipPublicUrl(fresh.videoPath) : "";
+  const narration = audioPath || stored.audio_path;
   return (
     <div className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-800/80 p-2">
       {url ? (
         <video
+          key={url}
           src={url}
           muted
           playsInline
@@ -335,9 +371,11 @@ function VideoCard({ topic, videoPath }: { topic: string; videoPath: string | nu
       ) : (
         <div className="h-16 w-24 rounded-lg bg-slate-950" />
       )}
-      <div>
+      <div className="min-w-0">
         <p className="text-xs tracking-wide text-slate-400 uppercase">Video sent</p>
         <p className="text-sm font-medium text-white">{topicLabel(topic)}</p>
+        <FreshVideoControls fresh={fresh} />
+        {narration ? <audio src={clipPublicUrl(narration)} preload="none" /> : null}
       </div>
     </div>
   );

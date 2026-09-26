@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { clipPublicUrl } from "@/lib/clips";
+import { useFreshVideo } from "@/lib/use-fresh-video";
 
 export type IncomingClip = {
   id: string;
@@ -11,11 +12,26 @@ export type IncomingClip = {
   audio_path: string | null;
 };
 
-export function IncomingClipCard({ clip }: { clip: IncomingClip }) {
+export function IncomingClipCard({
+  clip,
+  farmId,
+  callId,
+}: {
+  clip: IncomingClip;
+  farmId: string;
+  callId: string;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [needsTap, setNeedsTap] = useState(false);
-  const videoUrl = clip.video_path ? clipPublicUrl(clip.video_path) : "";
+  const fresh = useFreshVideo({
+    farmId,
+    callId,
+    topic: clip.topic,
+    language: clip.language,
+    videoPath: clip.video_path ?? "",
+  });
+  const videoUrl = fresh.videoPath ? clipPublicUrl(fresh.videoPath) : "";
   const audioUrl = clip.audio_path ? clipPublicUrl(clip.audio_path) : "";
 
   useEffect(() => {
@@ -84,6 +100,32 @@ export function IncomingClipCard({ clip }: { clip: IncomingClip }) {
         <p className="px-3 pb-3 text-sm">The clip file is missing.</p>
       )}
       {audioUrl ? <audio ref={audioRef} src={audioUrl} preload="auto" /> : null}
+      <FreshVideoControls fresh={fresh} />
     </article>
+  );
+}
+
+export function FreshVideoControls({
+  fresh,
+}: {
+  fresh: ReturnType<typeof useFreshVideo>;
+}) {
+  return (
+    <div className="space-y-1 px-3 py-2">
+      <button
+        type="button"
+        data-testid="generate-fresh-video"
+        disabled={fresh.busy}
+        onClick={() => void fresh.generate()}
+        className="rounded-full border border-white/40 px-3 py-1 text-sm text-white disabled:opacity-50"
+      >
+        Generate a fresh video
+      </button>
+      {fresh.note ? (
+        <p data-testid="fresh-video-status" className="text-sm text-amber-100">
+          {fresh.note}
+        </p>
+      ) : null}
+    </div>
   );
 }
