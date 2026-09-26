@@ -1,4 +1,6 @@
+import knowledgeSources from "../../data/knowledge/sources.json";
 import type { CallBundle } from "./farm-data";
+import { knowledgeCollectionIdFor } from "./farms";
 import { PhoneAudio } from "./phone-audio";
 import type { ToolHandler } from "./tools";
 
@@ -84,6 +86,8 @@ export class VoiceSession {
   private userDrafts = new Map<string, { text: string; posted: boolean }>();
   private userFallbackId = "";
   private typedCount = 0;
+  private loggedFileSearch = new Set<string>();
+  private pendingLiterature: string[] = [];
   private eventQueue: QueuedEvent[] = [];
   private eventTimer: ReturnType<typeof setTimeout> | null = null;
   private checking = false;
@@ -240,7 +244,7 @@ export class VoiceSession {
       session: {
         voice: bundle.voice,
         instructions: bundle.instructions,
-        tools: bundle.tools,
+        tools: sessionTools(bundle),
         turn_detection: { type: "server_vad", silence_duration_ms: 900 },
         audio: {
           input: {
@@ -277,6 +281,7 @@ export class VoiceSession {
   private onServerEvent(event: ServerEvent): void {
     const type = typeof event.type === "string" ? event.type : "unknown";
     this.noteEventType(type, event);
+    this.noteFileSearch(type, event);
 
     if (type === "error") {
       const detail = event.error as { message?: string } | undefined;
@@ -446,6 +451,11 @@ export class VoiceSession {
     const name = typeof event.name === "string" ? event.name : "";
     const callId = typeof event.call_id === "string" ? event.call_id : "";
     if (!name || !callId || this.seenToolIds.has(callId)) return;
+    if (name === "collections_search" || name === "file_search") {
+      this.seenToolIds.add(callId);
+      this.logLiteratureSearch(callId, event);
+      return;
+    }
     this.seenToolIds.add(callId);
     this.pendingTools.push({ name, callId, arguments: event.arguments });
     this.callbacks.onTool(name, "call");
@@ -567,6 +577,7 @@ export class VoiceSession {
     const trimmed = text.trim();
     if (isDiscardedTranscript(trimmed)) return;
     this.callbacks.onTranscript(role, trimmed, final, itemId);
+    if (role === "assistant" && final) this.attributeLiterature(trimmed);
     if (!final) return;
     const key = `${role}:${itemId}`;
     if (this.postedTranscripts.has(key)) return;
@@ -600,6 +611,55 @@ export class VoiceSession {
     }
   }
 
+  private logLiteratureSearch(callId: string, event: ServerEvent): void {
+    const hits: FileSearchResult[] = [];
+    collectFileHits(event, hits);
+    const sources = literatureSources(hits);
+    this.callbacks.onTool("file_search", "call");
+    this.postEvent("tool_call", { name: "file_search", callId, arguments: event.arguments ?? {} });
+    if (sources.length > 0) {
+      this.finishLiteratureSearch(callId, sources);
+      return;
+    }
+    this.pendingLiterature.push(callId);
+  }
+
+  private finishLiteratureSearch(
+    callId: string,
+    sources: Array<{ title: string; publisher: string; url: string; file: string }>,
+  ): void {
+    this.callbacks.onTool("file_search", "result");
+    this.postEvent("tool_result", { name: "file_search", callId, sources });
+  }
+
+  private attributeLiterature(text: string): void {
+    if (this.pendingLiterature.length === 0) return;
+    const sources = sourcesNamedIn(text);
+    if (sources.length === 0) return;
+    const callId = this.pendingLiterature.shift();
+    if (!callId) return;
+    this.finishLiteratureSearch(callId, sources);
+  }
+
+  private noteFileSearch(type: string, event: ServerEvent): void {
+    for (const item of fileSearchItems(type, event)) {
+      if (!item.results) continue;
+      const id = item.id || `search:${(item.queries ?? []).join("|")}`;
+      if (this.loggedFileSearch.has(id)) continue;
+      if (item.status && item.status !== "completed") continue;
+      this.loggedFileSearch.add(id);
+      const sources = literatureSources(item.results);
+      this.callbacks.onTool("file_search", "call");
+      this.postEvent("tool_call", { name: "file_search", queries: item.queries ?? [] });
+      this.callbacks.onTool("file_search", "result");
+      this.postEvent("tool_result", {
+        name: "file_search",
+        queries: item.queries ?? [],
+        sources,
+      });
+    }
+  }
+
   private send(message: unknown): void {
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
     this.socket.send(JSON.stringify(message));
@@ -619,6 +679,157 @@ export class VoiceSession {
 export function isDiscardedTranscript(text: string): boolean {
   const trimmed = text.trim();
   return !trimmed || trimmed === "..." || trimmed.toLowerCase() === "[noise]";
+}
+
+function sessionTools(bundle: CallBundle): unknown[] {
+  const collectionId = knowledgeCollectionIdFor(bundle.farmId);
+  if (!collectionId) return bundle.tools;
+  return [
+    ...bundle.tools,
+    { type: "file_search", vector_store_ids: [collectionId], max_num_results: 3 },
+  ];
+}
+
+type KnowledgeDocument = {
+  title: string;
+  publisher: string;
+  url: string;
+  file: string;
+  fileId?: string;
+};
+
+type FileSearchResult = { file_id?: string; filename?: string };
+type FileSearchItem = {
+  id: string;
+  status?: string;
+  queries?: string[];
+  results?: FileSearchResult[];
+};
+
+function fileSearchItems(type: string, event: ServerEvent): FileSearchItem[] {
+  const items: FileSearchItem[] = [];
+  if (type === "response.output_item.done") {
+    const parsed = asFileSearchItem(event.item);
+    if (parsed) items.push(parsed);
+  }
+  if (type === "response.file_search_call.completed") {
+    items.push({
+      id: stringField(event.item_id) || stringField(event.id),
+      status: "completed",
+      queries: stringList(event.queries),
+      results: resultList(event.results),
+    });
+  }
+  if (type === "response.done") {
+    const response = event.response;
+    if (response && typeof response === "object") {
+      const output = (response as { output?: unknown }).output;
+      if (Array.isArray(output)) {
+        for (const item of output) {
+          const parsed = asFileSearchItem(item);
+          if (parsed) items.push(parsed);
+        }
+      }
+    }
+  }
+  return items;
+}
+
+function asFileSearchItem(value: unknown): FileSearchItem | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const item = value as { type?: unknown; id?: unknown; status?: unknown; queries?: unknown; results?: unknown };
+  if (item.type !== "file_search_call") return undefined;
+  return {
+    id: typeof item.id === "string" ? item.id : "",
+    status: typeof item.status === "string" ? item.status : undefined,
+    queries: stringList(item.queries),
+    results: resultList(item.results),
+  };
+}
+
+function resultList(value: unknown): FileSearchResult[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value.flatMap((entry) => {
+    if (!entry || typeof entry !== "object") return [];
+    const row = entry as { file_id?: unknown; filename?: unknown };
+    return [
+      {
+        file_id: typeof row.file_id === "string" ? row.file_id : undefined,
+        filename: typeof row.filename === "string" ? row.filename : undefined,
+      },
+    ];
+  });
+}
+
+function stringList(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value.filter((item): item is string => typeof item === "string");
+}
+
+function stringField(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+function collectFileHits(value: unknown, hits: FileSearchResult[], depth = 0): void {
+  if (!value || depth > 8) return;
+  if (Array.isArray(value)) {
+    for (const entry of value) collectFileHits(entry, hits, depth + 1);
+    return;
+  }
+  if (typeof value !== "object") return;
+  const row = value as Record<string, unknown>;
+  if (typeof row.file_id === "string" || typeof row.filename === "string") {
+    hits.push({
+      file_id: typeof row.file_id === "string" ? row.file_id : undefined,
+      filename: typeof row.filename === "string" ? row.filename : undefined,
+    });
+  }
+  for (const child of Object.values(row)) collectFileHits(child, hits, depth + 1);
+}
+
+function sourcesNamedIn(text: string): Array<{ title: string; publisher: string; url: string; file: string }> {
+  const lower = text.toLowerCase();
+  const irri = lower.includes("irri") || text.includes("国际水稻研究所");
+  const fao = /\bfao\b/i.test(text) || text.includes("粮农组织");
+  return (knowledgeSources.documents as KnowledgeDocument[]).flatMap((doc) => {
+    const row = { title: doc.title, publisher: doc.publisher, url: doc.url, file: doc.file };
+    if (doc.publisher === "FAO" && fao) return [row];
+    if (doc.publisher !== "IRRI" || !irri) return [];
+    const title = doc.title.toLowerCase();
+    if (lower.includes(title)) return [row];
+    if (title === "drought" && lower.includes("drought")) return [row];
+    if (title.includes("heat") && (lower.includes("canopy") || lower.includes("feels the heat"))) return [row];
+    if (title.includes("water") && (lower.includes("water management") || lower.includes("alternate wetting"))) {
+      return [row];
+    }
+    return [];
+  });
+}
+
+function literatureSources(results: FileSearchResult[]): Array<{
+  title: string;
+  publisher: string;
+  url: string;
+  file: string;
+}> {
+  const found: Array<{ title: string; publisher: string; url: string; file: string }> = [];
+  const seen = new Set<string>();
+  for (const result of results) {
+    const doc = (knowledgeSources.documents as KnowledgeDocument[]).find(
+      (item) =>
+        (result.file_id && item.fileId === result.file_id) ||
+        (result.filename && (item.file === result.filename || result.filename.endsWith(item.file))),
+    );
+    const key = doc?.file || result.file_id || result.filename || "";
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    found.push(
+      doc
+        ? { title: doc.title, publisher: doc.publisher, url: doc.url, file: doc.file }
+        : { title: result.filename || "Literature", publisher: "", url: "", file: result.filename || "" },
+    );
+  }
+  return found;
 }
 
 function parseArgs(raw: unknown): Record<string, unknown> {

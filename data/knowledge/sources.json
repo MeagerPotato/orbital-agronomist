@@ -1,0 +1,32 @@
+{
+  "documents": [
+    {
+      "title": "Drought",
+      "publisher": "IRRI",
+      "url": "http://www.knowledgebank.irri.org/decision-tools/rice-doctor/rice-doctor-fact-sheets/item/drought",
+      "file": "irri-drought.html",
+      "fileId": "file_27189dbb-1e33-4e64-b9de-9e2cd5723f7d"
+    },
+    {
+      "title": "Water management",
+      "publisher": "IRRI",
+      "url": "http://www.knowledgebank.irri.org/step-by-step-production/growth/water-management",
+      "file": "irri-water-management.html",
+      "fileId": "file_d830a1cf-c12f-4f66-92fc-298f91c039b9"
+    },
+    {
+      "title": "Rice feels the heat",
+      "publisher": "IRRI",
+      "url": "https://ricetoday.irri.org/rice-feels-the-heat/",
+      "file": "irri-rice-feels-the-heat.html",
+      "fileId": "file_0c196546-7d3b-4736-b36d-646a727524bb"
+    },
+    {
+      "title": "Extreme heat and agriculture",
+      "publisher": "FAO",
+      "url": "https://openknowledge.fao.org/server/api/core/bitstreams/246cffd9-90e9-4d98-ab4c-2fec7a9a13fd/content",
+      "file": "fao-extreme-heat-and-agriculture.pdf",
+      "fileId": "file_92b95236-e310-4fa0-b467-c649e44daf49"
+    }
+  ]
+}

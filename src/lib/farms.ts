@@ -11,6 +11,12 @@ export function getFarmConfig(farmId: string): FarmConfig | undefined {
   return farms.find((farm) => farm.id === farmId);
 }
 
+export function knowledgeCollectionIdFor(farmId: string): string | undefined {
+  const farm = getFarmConfig(farmId) as (FarmConfig & { knowledgeCollectionId?: string }) | undefined;
+  const id = farm?.knowledgeCollectionId;
+  return typeof id === "string" && id.startsWith("collection_") ? id : undefined;
+}
+
 export function voiceFor(language: Lang): "ara" | "celeste" {
   return language === "zh" ? "ara" : "celeste";
 }
@@ -73,6 +79,7 @@ export function instructionsFor(input: {
   const { farmerName, region, country } = farm.profile;
   const crop = cropFor(farm, language);
   const today = formatSpokenDate(simulatedToday, language);
+  const hasLiterature = Boolean(knowledgeCollectionIdFor(farm.id));
   const lines = [
     "# Role",
     "You are Orbital Agronomist (天眼农技助手 in Chinese), a phone assistant for smallholder farmers. You explain what satellites and weather data show about the caller's own field, then give practical, general guidance.",
@@ -91,6 +98,9 @@ export function instructionsFor(input: {
     "# Tools",
     "- Call get_field_health and get_weather_summary before making any claim about the field.",
     "- Call get_diagnosis before giving advice. At most 3 actions, most important first.",
+    ...(hasLiterature
+      ? ["- Before giving advice, search the literature collection and name the source in that same turn."]
+      : []),
     "- Offer a short video for the top action; call send_guidance_clip only after the caller agrees.",
     "",
     "# Limits",
@@ -101,6 +111,16 @@ export function instructionsFor(input: {
     "# Critical",
     "When the caller asks about the field, call get_field_health and get_weather_summary before any claim. Call get_diagnosis before any advice. Use only numbers the tools return. For greenness, speak only whole-number percent changes versus last month and versus the same time last year, never the raw index.",
   ];
+  if (hasLiterature) {
+    lines.push(
+      "",
+      "# Literature",
+      "file_search searches public IRRI and FAO guidance on rice under drought and heat. Before any advice, search it and name the source in the same turn.",
+      '- In English say "IRRI recommends…" or "FAO notes…".',
+      '- In Chinese say "根据国际水稻研究所…" for IRRI, or "根据联合国粮农组织…" for FAO.',
+      "- Cite only a source the search returns. If the search returns nothing, give general guidance and do not invent a citation.",
+    );
+  }
   if (fixture) {
     lines.push(
       "",

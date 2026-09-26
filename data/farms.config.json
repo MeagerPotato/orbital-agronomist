@@ -29,7 +29,10 @@
           "zh": "中稻",
           "en": "mid-season rice"
         },
-        "languages": ["zh", "en"],
+        "languages": [
+          "zh",
+          "en"
+        ],
         "primaryLanguage": "zh",
         "event": {
           "name": "2022 Yangtze basin drought + heatwave",
@@ -67,7 +70,8 @@
           "en": "Do not spray leaves in the midday heat. If a foliar spray is needed, wait until evening. Confirm with your local agricultural station.",
           "zh": "最热的中午不要喷叶面。如果需要叶面补充，放到傍晚再喷，并按农技站说的用量。请先问当地农技站。"
         }
-      }
+      },
+      "knowledgeCollectionId": "collection_5c9546c4-f18c-4ae5-b99a-b23677495fa3"
     }
   ]
 }
