@@ -6,11 +6,12 @@ import { QRCodeSVG } from "qrcode.react";
 import type { DashboardData } from "@/lib/dashboard-data";
 import type { Diagnosis } from "@/lib/types";
 import { NdviChart, WeatherChart } from "./charts";
+import type { FootprintCell } from "./field-map";
 import { DroughtAlertButton } from "./drought-alert-button";
 import { LiveCallPanel } from "./live-call";
 import { OrbitPanel } from "./orbit-panel";
 
-const FieldMap = dynamic(() => import("./field-map"), {
+const FieldMapView = dynamic(() => import("./field-map"), {
   ssr: false,
   loading: () => <div className="h-full w-full animate-pulse bg-slate-800" />,
 });
@@ -23,7 +24,15 @@ const STATUS_LABEL: Record<Diagnosis["status"], string> = {
   unclear: "Unclear",
 };
 
-export function DashboardView({ farmId, data }: { farmId: string; data: DashboardData }) {
+export function DashboardView({
+  farmId,
+  data,
+  footprint = [],
+}: {
+  farmId: string;
+  data: DashboardData;
+  footprint?: FootprintCell[];
+}) {
   const { farm, ndvi, weather, diagnosis } = data;
   const eventYear = Number(farm.simulatedToday.slice(0, 4));
   const [callUrl, setCallUrl] = useState(`/call/${farmId}`);
@@ -82,9 +91,17 @@ export function DashboardView({ farmId, data }: { farmId: string; data: Dashboar
         <OrbitPanel farmId={farmId} polygon={farm.polygon} />
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <Panel title="Field">
+          <Panel title="Drought footprint">
             <div className="h-80 overflow-hidden rounded-xl">
-              <FieldMap polygon={farm.polygon} />
+              <FieldMapView polygon={farm.polygon} footprint={footprint} />
+            </div>
+            <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-300">
+              <Swatch color="#dc2626" label="≤ −30%" />
+              <Swatch color="#f97316" label="−15 to −30%" />
+              <Swatch color="#facc15" label="−5 to −15%" />
+              <Swatch color="#a3a3a3" label="About the same" />
+              <Swatch color="#16a34a" label="Higher than 2021" />
+              <span className="text-amber-300">Yellow outline is the field</span>
             </div>
           </Panel>
           <Panel title={`Greenness, ${eventYear} vs ${farm.baselineYear}`}>
@@ -118,6 +135,15 @@ export function DashboardView({ farmId, data }: { farmId: string; data: Dashboar
         </footer>
       </div>
     </main>
+  );
+}
+
+function Swatch({ color, label }: { color: string; label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1">
+      <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: color }} />
+      {label}
+    </span>
   );
 }
 
