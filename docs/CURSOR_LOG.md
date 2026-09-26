@@ -14,3 +14,4 @@ Submission evidence. One line per task: timestamp, what was built, which Cursor 
 - 2026-09-26 15:10 EDT — Wrote the cn-rice-2022 diagnosis in Mandarin and English, seeded Supabase, and removed the ke-maize-2022 farm row. Cursor feature: Agent.
 - 2026-09-26 15:16 EDT — Checked in the Phase 4 voice hotline: call screen, Grok Voice client, call APIs, and the challenge brief. Cursor feature: Agent.
 - 2026-09-26 15:26 EDT — Voice polish: one transcript bubble and one call event per utterance, greeting once, natural dates, and greenness as a whole-number percent change. Cursor feature: Agent (browser).
+- 2026-09-26 15:29 EDT — Regenerated the rice diagnosis so greenness is a rounded percent change, dates are spoken, and the crop is 中稻 / mid-season rice, then reseeded Supabase. Cursor feature: Agent.

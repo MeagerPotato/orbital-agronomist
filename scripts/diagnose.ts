@@ -67,6 +67,7 @@ async function diagnosisInput(farm: FarmExtras) {
     simulatedToday: json.simulatedToday,
     baselineYear: json.baselineYear,
     recentDays: 30,
+    heatThresholdC: 35,
     recentWindowStart: typeof json.simulatedToday === "string" ? addDays(json.simulatedToday, -29) : null,
     seasonWindow: farm.analysisWindow,
     baselineSeasonWindow: farm.baselineWindow,
@@ -161,11 +162,15 @@ async function requestDiagnosis(
 function systemPrompt(topics: string[], languages: Lang[], officer: Record<Lang, string>): string {
   return [
     "You write a field diagnosis for a fictional farmer. The JSON input contains real Sentinel-2 and NASA POWER figures.",
-    "Use only numbers that appear in the input. Do not invent measurements, dates, counts, or percentages. Do not round a figure into a different number.",
+    "Use only numbers that appear in the input. Do not invent measurements, dates, counts, or percentages.",
+    "Never state raw greenness index values (numbers like 0.6085). Describe greenness only as rounded whole-number percent changes versus 30 days ago and versus the same time last year.",
+    "Write dates naturally. Chinese example: 2022年8月25日. English example: August 25, 2022. Do not write ISO dates like 2022-08-25.",
+    "Call the crop 中稻 in Chinese and mid-season rice in English.",
+    "Rainfall, heat-day counts, root-zone wetness, and heatThresholdC may be quoted exactly as given. Do not round those.",
     "General agronomy only. Do not name fertilizer rates, pesticide doses, or chemical products.",
     `Write every string in each of these languages: ${languages.join(", ")}. zh is plain spoken Mandarin. en is plain spoken English.`,
     "Summary is 2 or 3 short sentences.",
-    "Each evidence item cites at least one number copied from the input.",
+    "Each evidence item cites at least one allowed number: a rounded greenness percent, a rainfall figure, a heat-day count, or root-zone wetness.",
     `Actions must use exactly these topics, in this order: ${topics.join(", ")}. Each action is 1 or 2 sentences a farmer can follow.`,
     `Caveats must tell the farmer to confirm with ${officer.zh} / ${officer.en} before acting.`,
     "The farmer is fictional. Do not claim anyone visited the field.",
@@ -242,7 +247,21 @@ function validateDiagnosis(
     }
   }
 
+  const text = diagnosisText(diagnosis);
+  const simulatedToday = isRecord(input) && typeof input.simulatedToday === "string" ? input.simulatedToday : "";
+  if (simulatedToday) {
+    const spoken = spokenDate(simulatedToday);
+    if (!text.zh.includes(spoken.zh)) problems.push(`Chinese must include the date ${spoken.zh}`);
+    if (!text.en.includes(spoken.en)) problems.push(`English must include the date ${spoken.en}`);
+  }
+  if (!text.zh.includes("中稻")) problems.push("Chinese must call the crop 中稻");
+  if (!/mid-season rice/i.test(text.en)) problems.push("English must call the crop mid-season rice");
+  if (/\d{4}-\d{2}-\d{2}/.test(`${text.zh}\n${text.en}`)) {
+    problems.push("write dates in words, not as YYYY-MM-DD");
+  }
+
   const allowed = collectNumbers(input);
+  const indexes = indexValues(input);
   const used = collectNumbers({
     evidence: diagnosis.evidence,
     summary: diagnosis.summary,
@@ -250,11 +269,70 @@ function validateDiagnosis(
     caveats: diagnosis.caveats,
   });
   for (const value of used) {
+    if (indexes.some((index) => sameAtPrecision(value, index)) && !isPercentOrWeather(value, input)) {
+      problems.push(`do not state raw greenness index ${value}; use a rounded percent change`);
+      continue;
+    }
     if (!allowed.some((inputValue) => sameAtPrecision(value, inputValue))) {
       problems.push(`number ${value} is not in the input`);
     }
   }
   return problems;
+}
+
+function diagnosisText(diagnosis: Diagnosis): { zh: string; en: string } {
+  const chunks = [
+    diagnosis.summary.zh,
+    diagnosis.summary.en,
+    diagnosis.caveats.zh,
+    diagnosis.caveats.en,
+    ...diagnosis.evidence.flatMap((item) => [item.zh, item.en]),
+    ...diagnosis.actions.flatMap((action) => [action.text.zh, action.text.en]),
+  ];
+  return {
+    zh: chunks.filter((item) => item && /[\u4e00-\u9fff]/.test(item)).join("\n"),
+    en: chunks.filter((item) => item && /[A-Za-z]/.test(item)).join("\n"),
+  };
+}
+
+function spokenDate(iso: string): { zh: string; en: string } {
+  const [year, month, day] = iso.split("-").map(Number);
+  const monthName = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ][month - 1];
+  return { zh: `${year}年${month}月${day}日`, en: `${monthName} ${day}, ${year}` };
+}
+
+function indexValues(input: unknown): number[] {
+  if (!isRecord(input) || !isRecord(input.ndvi)) return [];
+  const values: number[] = [];
+  for (const series of [input.ndvi.event, input.ndvi.baseline]) {
+    if (!Array.isArray(series)) continue;
+    for (const point of series) {
+      if (!isRecord(point)) continue;
+      if (typeof point.mean === "number") values.push(point.mean);
+      if (typeof point.stdev === "number") values.push(point.stdev);
+    }
+  }
+  return values;
+}
+
+function isPercentOrWeather(value: number, input: unknown): boolean {
+  if (!isRecord(input) || !isRecord(input.derived)) return false;
+  const derived = input.derived;
+  const safe = [
+    derived.pctChange30d,
+    derived.pctChangeVsBaseline,
+    derived.rain30dMm,
+    derived.rain30dMmBaseline,
+    derived.rainWindowMm,
+    derived.rainWindowMmBaseline,
+    derived.heatDays35C_30d,
+    derived.rootZoneWetnessNow,
+    derived.rootZoneWetnessBaseline,
+  ];
+  return safe.some((item) => typeof item === "number" && sameAtPrecision(value, item));
 }
 
 function collectNumbers(value: unknown): number[] {
