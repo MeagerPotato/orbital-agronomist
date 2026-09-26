@@ -36,45 +36,20 @@
         "irrigation_timing",
         "prioritize_flowering_fields",
         "heat_stress_foliar_spray"
-      ]
-    },
-    {
-      "id": "ke-maize-2022",
-      "polygonPath": "data/farms/ke-maize-2022/field.geojson",
-      "analysisWindow": {
-        "start": "2022-02-01",
-        "end": "2022-06-30"
+      ],
+      "extensionOfficer": {
+        "zh": "当地农技站",
+        "en": "your local agricultural extension station (农技站)"
       },
-      "baselineYear": 2020,
-      "baselineWindow": {
-        "start": "2020-02-01",
-        "end": "2020-06-30"
-      },
-      "simulatedTodayRule": "Last cloud-free observation in late April or May 2022",
-      "simulatedTodayWindow": {
-        "start": "2022-04-20",
-        "end": "2022-05-31"
-      },
-      "profile": {
-        "farmerName": "Mary Mutua",
-        "farmerNameEn": "Mary Mutua",
-        "fictional": true,
-        "where": "Smallholder maize plots in Machakos / Makueni / Kitui, eastern Kenya",
-        "region": "Machakos / Makueni / Kitui",
-        "country": "Kenya",
-        "crop": "Maize (with beans)",
-        "languages": ["en"],
-        "primaryLanguage": "en",
-        "event": {
-          "name": "2022 Horn of Africa drought",
-          "summary": "Replay of the 2022 Horn of Africa drought after the failed March–May long rains. Satellite and weather data are real; the farmer is fictional."
+      "clipPrompt": {
+        "setting": "rural southern China, terraced rice paddies",
+        "farmer": "a middle-aged rice farmer in a straw hat",
+        "scenes": {
+          "irrigation_timing": "early-morning sun over the paddies; the farmer opens a small earthen channel gate so a shallow layer of water flows in",
+          "prioritize_flowering_fields": "close-up of rice panicles in flower, then the farmer guiding water to the flowering plot first",
+          "heat_stress_foliar_spray": "late afternoon, the farmer walks the paddy with a backpack sprayer, fine mist over the leaves"
         }
-      },
-      "clipTopics": [
-        "mulching_soil_moisture",
-        "zai_pits_water_harvesting",
-        "drought_tolerant_varieties"
-      ]
+      }
     }
   ]
 }

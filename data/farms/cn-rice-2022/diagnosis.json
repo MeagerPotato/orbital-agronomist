@@ -1,0 +1,50 @@
+{
+  "model": "grok-4.7",
+  "status": "water_and_heat_stress",
+  "severity": 2,
+  "evidence": [
+    {
+      "zh": "2022-08-25的植被指数是0.6085，30天前是0.7701，变化是-21。对照2021-08-30的0.8994，变化是-32.3。",
+      "en": "On 2022-08-25 the vegetation index was 0.6085, versus 0.7701 30 days earlier, a change of -21. Against 0.8994 on 2021-08-30, the change was -32.3."
+    },
+    {
+      "zh": "近30天降雨是21.6毫米，对照是261.8毫米。",
+      "en": "Rain in the last 30 days was 21.6 mm, against a baseline of 261.8 mm."
+    },
+    {
+      "zh": "根区湿度现在是0.71，对照是0.92。近30天有3个高温日。",
+      "en": "Root-zone wetness is 0.71 now, against a baseline of 0.92. There were 3 heat days in the last 30 days."
+    }
+  ],
+  "summary": {
+    "zh": "按2022-08-25的数字，这块中稻又缺水又受热。近30天只下了21.6毫米雨，植被指数是0.6085。先保正在开花的田，浇水和叶面喷施都先问当地农技站。",
+    "en": "Figures for 2022-08-25 show this mid-season rice short of water and under heat stress. Only 21.6 mm of rain fell in the last 30 days, and the vegetation index is 0.6085. Save flowering fields first, and ask your local station before you irrigate or spray."
+  },
+  "actions": [
+    {
+      "topic": "irrigation_timing",
+      "text": {
+        "zh": "近30天只下了21.6毫米雨，根区湿度是0.71。尽量在清晨或傍晚浇，先摸土再浇，不要赶在一天里最热的时候浇。",
+        "en": "Only 21.6 mm of rain fell in the last 30 days, and root-zone wetness is 0.71. Water in the early morning or evening, feel the soil first, and do not irrigate in the hottest part of the day."
+      }
+    },
+    {
+      "topic": "prioritize_flowering_fields",
+      "text": {
+        "zh": "水不够时，先浇正在开花的中稻田，再考虑其他田。开花这段最怕旱，不要把有限的水平均分到每块田。",
+        "en": "When water is short, irrigate mid-season rice that is flowering before the other fields. Flowering is the stage most hurt by drought, so do not spread limited water evenly across every field."
+      }
+    },
+    {
+      "topic": "heat_stress_foliar_spray",
+      "text": {
+        "zh": "如果当地农技站认为需要叶面喷施来减轻热害，就在清晨或傍晚喷，不要在中午最热时喷。不要自己另加东西，也不要加大用量。",
+        "en": "If your local station says a foliar spray is needed for heat stress, spray in the early morning or evening, not at the hottest midday. Do not add anything else yourself, and do not raise the amount."
+      }
+    }
+  ],
+  "caveats": {
+    "zh": "这些数字来自卫星和天气资料，张师傅是虚构的，没有人到田里看过。动手之前，请先向当地农技站确认。",
+    "en": "These figures come from satellite and weather data. The farmer is fictional, and nobody visited the field. Before you act, confirm with your local agricultural extension station (农技站)."
+  }
+}
